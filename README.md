@@ -3,6 +3,8 @@ Please note that this clock comes with either the Arduino Uno or Arduino Mega de
 alternate firmware, only Arduino Mega is supported. Support for Arduino Uno may be added at some point, but isn't currently
 planned.
 
+*Note*: this firmware is not related nor supported by GRA & AFCH. If you want the official firmware, you can find it [here](https://github.com/afch/NixeTubesShieldNCS318).
+
 How to build
 ============
 Even though this uses Arduino libraries, we're not using the Arduino IDE for building. Instead you need:
