@@ -92,8 +92,21 @@ boolean dateEdit()
 	return true;
 }
 
+boolean isValidDate()
+{
+	int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	if (menuGetValue(MENU_EDIT_YEAR) % 4 == 0) days[1] = 29;
+	return menuGetValue(MENU_EDIT_DAY) <= days[menuGetValue(MENU_EDIT_MONTH) - 1];
+
+}
+
 void dateOnSave()
 {
+	if(!isValidDate()) {
+		menuSetPosition(MENU_EDIT_DAY);
+		return;
+	}
+
 	rtc_info *rtcInfo = rtcGetTime();
 	rtcInfo->days = menuGetValue(MENU_EDIT_DAY);
 	rtcInfo->months = menuGetValue(MENU_EDIT_MONTH);

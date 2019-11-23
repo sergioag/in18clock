@@ -55,6 +55,7 @@ typedef struct menu_struct
 
 void menuSetup(menu_struct *new_menu, int numElements);
 int menuGetCurrentPosition();
+void menuSetPosition(int newPosition);
 void menuUpdate();
 void menuSetValue(int index, int value);
 int menuGetValue(int index);
