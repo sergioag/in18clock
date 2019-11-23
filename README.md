@@ -3,6 +3,10 @@ Please note that this clock comes with either the Arduino Uno or Arduino Mega de
 
 *Note*: this firmware is not related nor supported by GRA & AFCH. If you want the official firmware, you can find it [here](https://github.com/afch/NixeTubesShieldNCS318).
 
+License
+=======
+This code is licensed under a 3-clause BSD license, which roughly means that any usage is allowed as long as the license and copyright notice are preserved. Please see [here](https://github.com/sergioag/in18clock/blob/master/LICENSE) for details.
+
 How to build
 ============
 Even though this uses Arduino libraries, we're not using the Arduino IDE for building. Instead you need:
