@@ -101,6 +101,7 @@ void timeDisplay()
 		displayPowerOff();
 	}
 	else {
+		displayPowerOn();
 		String str = getTimeString(hour(), minute(), second());
 		if(!antiPoisoningInProgress && second() == 0) {
 			resetAntiPoisoning();
