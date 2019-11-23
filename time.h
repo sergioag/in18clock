@@ -34,11 +34,12 @@
 #define TIME_FORMAT_24H		0
 #define TIME_FORMAT_12H		1
 
-void timeOnShow();
+void timeOnShow(boolean isShowing);
 void timeDisplay();
 void timeEditDisplay();
 boolean timeEdit();
 void timeOnSave();
+void timeWakeUpDisplay();
 
 String getTimeString(int hours, int minutes, int seconds);
 

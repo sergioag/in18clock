@@ -37,6 +37,7 @@
 #include "ds18b20.h"
 #include "leds.h"
 #include "menu.h"
+#include "onoff.h"
 #include "rtc.h"
 #include "temperature.h"
 #include "time.h"
@@ -45,51 +46,63 @@
 menu_struct menu[] = {
 	/* Parent,	First Child,	Last Child,	Value,		Min,		Max,		EEPROM Offset,	Blink,			Display,	Edit,		Inc.			Dec.			Save 		On Show */
 /* Display time */
-/*  0 */ {NO_PARENT,	5,	8,	0,	0,	0,	NO_LOAD,	0,		timeDisplay,	timeEdit,	0,	0, 	timeOnSave,	timeOnShow},
+/*  0 */ {NO_PARENT,	6,	9,	0,	0,	0,	NO_LOAD,	0,		timeDisplay,	timeEdit,	0,	0, 	timeOnSave,	timeOnShow},
 /* Display date */
-/*  1 */ {NO_PARENT,	9,	12,	0,	0,	0,	NO_LOAD,	0,		dateDisplay,	dateEdit,	0,	0,	dateOnSave,	0},
+/*  1 */ {NO_PARENT,	10,	13,	0,	0,	0,	NO_LOAD,	0,		dateDisplay,	dateEdit,	0,	0,	dateOnSave,	0},
 /* Display temperature */
-/*  2 */ {NO_PARENT,	13,	13,	0,	0,	0,	NO_LOAD,	0,		tempDisplay,	0,	0,	0,	tempSave,	0},
+/*  2 */ {NO_PARENT,	14,	14,	0,	0,	0,	NO_LOAD,	0,		tempDisplay,	0,	0,	0,	tempSave,	0},
 /* Display alarm */
-/*  3 */ {NO_PARENT,	14,	18,	0,	0,	0,	NO_LOAD,	0,		alarmDisplay,	0,	0,	0,	alarmOnSave,	0},
+/*  3 */ {NO_PARENT,	15,	19,	0,	0,	0,	NO_LOAD,	0,		alarmDisplay,	0,	0,	0,	alarmOnSave,	0},
 /* LED configuration */
-/*  4 */ {NO_PARENT,	19,	22,	0,	0,	0,	NO_LOAD,	0,		ledsDisplay,	0,	0,	0,	ledsOnSave,	0},
+/*  4 */ {NO_PARENT,	20,	23,	0,	0,	0,	NO_LOAD,	0,		ledsDisplay,	0,	0,	0,	ledsOnSave,	0},
+/* Turn On/Off Time */
+/*  5 */ {NO_PARENT,	24,	28,	0,	0,	0,	NO_LOAD,	0,		onOffDisplay,	0,	0,	0,	onOffSave,	0},
 /* 12/24 hours edit */
-/*  5 */ {0,	NO_CHILD,	NO_CHILD,	0,	0,	1,	1,	B00001100,		timeEditDisplay,0,	0,	0,	0,0},
+/*  6 */ {0,	NO_CHILD,	NO_CHILD,	0,	0,	1,	1,	B00001100,		timeEditDisplay,0,	0,	0,	0,0},
 /* Hours edit */
-/*  6 */ {0,	NO_CHILD,	NO_CHILD,	0,	0,	23,	NO_LOAD,	B00000011,		timeEditDisplay,0,	0,	0,	0,0},
+/*  7 */ {0,	NO_CHILD,	NO_CHILD,	0,	0,	23,	NO_LOAD,	B00000011,		timeEditDisplay,0,	0,	0,	0,0},
 /* Minutes edit */
-/*  7 */ {0,	NO_CHILD,	NO_CHILD,	0,	0,	59,	NO_LOAD,	B00001100,		timeEditDisplay,0,	0,	0,	0,0},
+/*  8 */ {0,	NO_CHILD,	NO_CHILD,	0,	0,	59,	NO_LOAD,	B00001100,		timeEditDisplay,0,	0,	0,	0,0},
 /* Seconds edit */
-/*  8 */ {0,	NO_CHILD,	NO_CHILD,	0,	0,	59,	NO_LOAD,	B00110000,		timeEditDisplay,0,	0,	0,	0,0},
+/*  9 */ {0,	NO_CHILD,	NO_CHILD,	0,	0,	59,	NO_LOAD,	B00110000,		timeEditDisplay,0,	0,	0,	0,0},
 /* Date format */
-/*  9 */ {1,	NO_CHILD,	NO_CHILD,	0,	0,	1,	13,	B00111111,		dateEditDisplay,0,	0,	0,	0,0},
+/* 10 */ {1,	NO_CHILD,	NO_CHILD,	0,	0,	1,	13,	B00111111,		dateEditDisplay,0,	0,	0,	0,0},
 /* Day edit */
-/* 10 */ {1,	NO_CHILD,	NO_CHILD,	0,	1,	31,	NO_LOAD,	B00000011,		dateEditDisplay,0,	0,	0,	0,0},
+/* 11 */ {1,	NO_CHILD,	NO_CHILD,	0,	1,	31,	NO_LOAD,	B00000011,		dateEditDisplay,0,	0,	0,	0,0},
 /* Month edit */
-/* 11 */ {1,	NO_CHILD,	NO_CHILD,	0,	1,	12,	NO_LOAD,	B00001100,		dateEditDisplay,0,	0,	0,	0,0},
+/* 12 */ {1,	NO_CHILD,	NO_CHILD,	0,	1,	12,	NO_LOAD,	B00001100,		dateEditDisplay,0,	0,	0,	0,0},
 /* Year edit */
-/* 12 */ {1,	NO_CHILD,	NO_CHILD,	0,	0,	99,	NO_LOAD,	B00110000,		dateEditDisplay,0,	0,	0,	0,0},
+/* 13 */ {1,	NO_CHILD,	NO_CHILD,	0,	0,	99,	NO_LOAD,	B00110000,		dateEditDisplay,0,	0,	0,	0,0},
 /* Celsius/Fahrenheit edit */
-/* 13 */ {2,	NO_CHILD,	NO_CHILD,	0,	0,	1,	11,	B00001100,		tempEditDisplay,0,	0,	0,	0,0},
+/* 14 */ {2,	NO_CHILD,	NO_CHILD,	0,	0,	1,	11,	B00001100,		tempEditDisplay,0,	0,	0,	0,0},
 /* Alarm Hours edit */
-/* 14 */ {3,	NO_CHILD,	NO_CHILD,	0,	0,	23,	2,	B00000011,		alarmDisplay,	0,	0,	0,	0,0},
+/* 15 */ {3,	NO_CHILD,	NO_CHILD,	0,	0,	23,	2,	B00000011,		alarmDisplay,	0,	0,	0,	0,0},
 /* Alarm Minutes edit */
-/* 15 */ {3,	NO_CHILD,	NO_CHILD,	0,	0,	59,	3,	B00001100,		alarmDisplay,	0,	0,	0,	0,0},
+/* 16 */ {3,	NO_CHILD,	NO_CHILD,	0,	0,	59,	3,	B00001100,		alarmDisplay,	0,	0,	0,	0,0},
 /* Alarm Seconds edit */
-/* 16 */ {3,	NO_CHILD,	NO_CHILD,	0,	0,	59,	4,	B00110000,		alarmDisplay,	0,	0,	0,	0,0},
+/* 17 */ {3,	NO_CHILD,	NO_CHILD,	0,	0,	59,	4,	B00110000,		alarmDisplay,	0,	0,	0,	0,0},
 /* Alarm Enable edit */
-/* 17 */ {3,	NO_CHILD,	NO_CHILD,	0,	0,	1,	5,	B00111111,		alarmDisplay,	0,	0,	0,	0,0},
+/* 18 */ {3,	NO_CHILD,	NO_CHILD,	0,	0,	1,	5,	B00111111,		alarmDisplay,	0,	0,	0,	0,0},
 /* Alarm Song */
-/* 18 */ {3,	NO_CHILD,	NO_CHILD,	0,	0,	6,	19,	B00001100,		alarmDisplay,	0,	0,	0,	0,0},
+/* 19 */ {3,	NO_CHILD,	NO_CHILD,	0,	0,	6,	19,	B00001100,		alarmDisplay,	0,	0,	0,	0,0},
 /* LED configuration */
-/* 19 */ {4,	NO_CHILD,	NO_CHILD,	1,	0,	2,	20,	B00001100,		ledsDisplay,	0,	0,	0,	0,0},
+/* 20 */ {4,	NO_CHILD,	NO_CHILD,	1,	0,	2,	20,	B00001100,		ledsDisplay,	0,	0,	0,	0,0},
 /* LED Red color */
-/* 20 */ {4,	NO_CHILD,	NO_CHILD,	0,	0,	63,	8,	B00000011,		ledsDisplay,	0,	0,	0,	0,0},
+/* 21 */ {4,	NO_CHILD,	NO_CHILD,	0,	0,	63,	8,	B00000011,		ledsDisplay,	0,	0,	0,	0,0},
 /* LED Green color */
-/* 21 */ {4,	NO_CHILD,	NO_CHILD,	0,	0,	63,	9,	B00001100,		ledsDisplay,	0,	0,	0,	0,0},
+/* 22 */ {4,	NO_CHILD,	NO_CHILD,	0,	0,	63,	9,	B00001100,		ledsDisplay,	0,	0,	0,	0,0},
 /* LED Blue color */
-/* 22 */ {4,	NO_CHILD,	NO_CHILD,	0,	0,	63,	10,	B00110000,		ledsDisplay,	0,	0,	0,	0,0},
+/* 23 */ {4,	NO_CHILD,	NO_CHILD,	0,	0,	63,	10,	B00110000,		ledsDisplay,	0,	0,	0,	0,0},
+/* Turn Off Hour */
+/* 24 */ {5,	NO_CHILD,	NO_CHILD,	0,	0,	23,	14,	B00001100,		onOffDisplay,	0,	0,	0,	0,0},
+/* Turn Off Minute */
+/* 25 */ {5,	NO_CHILD,	NO_CHILD,	0,	0,	59,	15,	B00110000,		onOffDisplay,	0,	0,	0,	0,0},
+/* Turn On Hour */
+/* 26 */ {5,	NO_CHILD,	NO_CHILD,	0,	0,	23,	16,	B00001100,		onOffDisplay,	0,	0,	0,	0,0},
+/* Turn On Minute */
+/* 27 */ {5,	NO_CHILD,	NO_CHILD,	0,	0,	59,	17,	B00110000,		onOffDisplay,	0,	0,	0,	0,0},
+/* Turn On/Off Enable */
+/* 28 */ {5,	NO_CHILD,	NO_CHILD,	0,	0,	1,	18,	B00111100,		onOffDisplay,	0,	0,	0,	0,0},
 };
 
 void setup() {

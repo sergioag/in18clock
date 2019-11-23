@@ -28,38 +28,65 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#ifndef IN18CLOCK_MENU_H
-#define IN18CLOCK_MENU_H
 
-#define NO_PARENT	-1
-#define	NO_CHILD	-1
-#define NO_LOAD		-1
+#include <Arduino.h>
+#include <Time.h>
+#include "User_Setup.h"
+#include "display.h"
+#include "menu.h"
+#include "onoff.h"
+#include "utils.h"
 
-typedef struct menu_struct
+void onOffDisplay()
 {
-	int 	parent;
-	int 	firstChild;
-	int 	lastChild;
-	int 	value;
-	int 	minValue;
-	int 	maxValue;
-	int 	eepromOffset;
-	int 	blinkPattern;
-	void	(*displayHandler)();
-	boolean (*onEditHandler)();
-	void	(*onIncrementHandler)();
-	void	(*onDecrementHandler)();
-	void	(*onSaveHandler)();
-	void	(*onShowHandler)(boolean isShowing);
-};
+	switch(menuGetCurrentPosition()) {
+		case MENU_EDIT_OFF_HOUR:
+		case MENU_EDIT_OFF_MINUTE:
+		case MENU_EDIT_ONOFF_ENABLE:
+		default:
+			displaySetValue("00" + PreZero(menuGetValue(MENU_EDIT_OFF_HOUR)) + PreZero(menuGetValue(MENU_EDIT_OFF_MINUTE)));
+			break;
+		case MENU_EDIT_ON_HOUR:
+		case MENU_EDIT_ON_MINUTE:
+			displaySetValue("00" + PreZero(menuGetValue(MENU_EDIT_ON_HOUR)) + PreZero(menuGetValue(MENU_EDIT_ON_MINUTE)));
+			break;
+	}
+	if(menuGetValue(MENU_EDIT_ONOFF_ENABLE)) {
+		displaySetUpperDots(true);
+		displaySetLowerDots(true);
+	}
+	else {
+		displaySetUpperDots(false);
+		displaySetLowerDots(false);
+	}
+}
 
-void menuSetup(menu_struct *new_menu, int numElements);
-int menuGetCurrentPosition();
-void menuSetPosition(int newPosition);
-void menuUpdate();
-void menuSetValue(int index, int value);
-int menuGetValue(int index);
-void menuSetBlinkPattern(int index, int blinkPattern);
-int menuSave(int index);
+void onOffSave()
+{
+	menuSave(MENU_EDIT_OFF_HOUR);
+	menuSave(MENU_EDIT_OFF_MINUTE);
+	menuSave(MENU_EDIT_ON_HOUR);
+	menuSave(MENU_EDIT_ON_MINUTE);
+	menuSave(MENU_EDIT_ONOFF_ENABLE);
+}
 
-#endif //IN18CLOCK_MENU_H
+boolean onOffShouldTurnOff()
+{
+	if(menuGetValue(MENU_EDIT_ONOFF_ENABLE)) {
+		int timeOff = (menuGetValue(MENU_EDIT_OFF_HOUR) * 100) + menuGetValue(MENU_EDIT_OFF_MINUTE);
+		int timeOn = (menuGetValue(MENU_EDIT_ON_HOUR) * 100) + menuGetValue(MENU_EDIT_ON_MINUTE);
+		int currentTime = (hour() * 100) + minute();
+
+		if(timeOff > timeOn) {  // Turned off during night
+			if(currentTime > timeOff || currentTime < timeOn) {
+				return true;
+			}
+		}
+		else {  // Turned off during day
+			if(currentTime > timeOff && currentTime < timeOn) {
+				return true;
+			}
+		}
+	}
+	return false;
+}

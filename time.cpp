@@ -32,6 +32,7 @@
 #include <Time.h>
 #include "display.h"
 #include "menu.h"
+#include "onoff.h"
 #include "rtc.h"
 #include "time.h"
 #include "utils.h"
@@ -44,7 +45,9 @@ String digitCycle[] = {
 };
 #define CYCLE_DELAY		150
 #define MAX_DIGITS_CYCLE	11
+#define DISPLAY_GRACE_TIME	10000
 int currentDigit = 0;
+long lastShow = 0;
 
 String getTimeString(int hours, int minutes, int seconds)
 {
@@ -65,9 +68,19 @@ void resetAntiPoisoning()
 	antiPoisoningInProgress = true;
 }
 
-void timeOnShow()
+void timeOnShow(boolean isShowing)
 {
-	resetAntiPoisoning();
+	if(isShowing) {
+		timeWakeUpDisplay();
+	}
+	else {
+		displayPowerOn();
+	}
+}
+
+void timeWakeUpDisplay()
+{
+	lastShow = millis();
 }
 
 String antiPoisoning(String str)
@@ -84,14 +97,19 @@ String antiPoisoning(String str)
 }
 void timeDisplay()
 {
-	String str = getTimeString(hour(), minute(), second());
-	if(!antiPoisoningInProgress && second() == 0) {
-		resetAntiPoisoning();
+	if(onOffShouldTurnOff() && millis() - lastShow > DISPLAY_GRACE_TIME) {
+		displayPowerOff();
 	}
-	str = antiPoisoning(str);
-	displaySetValue(str);
-	displaySetLowerDots(second() & 1);
-	displaySetUpperDots(second() & 1);
+	else {
+		String str = getTimeString(hour(), minute(), second());
+		if(!antiPoisoningInProgress && second() == 0) {
+			resetAntiPoisoning();
+		}
+		str = antiPoisoning(str);
+		displaySetValue(str);
+		displaySetLowerDots(second() & 1);
+		displaySetUpperDots(second() & 1);
+	}
 }
 
 void timeEditDisplay()

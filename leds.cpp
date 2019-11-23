@@ -34,6 +34,7 @@
 #include "display.h"
 #include "leds.h"
 #include "menu.h"
+#include "onoff.h"
 #include "utils.h"
 
 #define PIN            6

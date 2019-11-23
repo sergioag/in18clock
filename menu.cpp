@@ -60,8 +60,14 @@ static menu_struct *menu;
 
 void menuSetPosition(int newPosition)
 {
+	if(menu[menuPosition].onShowHandler) {
+		menu[menuPosition].onShowHandler(false);
+	}
 	menuPosition = newPosition;
 	displaySetBlinkMask(menu[menuPosition].blinkPattern);
+	if(menu[menuPosition].onShowHandler) {
+		menu[menuPosition].onShowHandler(true);
+	}
 }
 
 void menuSetup(menu_struct *new_menu, int numElements)

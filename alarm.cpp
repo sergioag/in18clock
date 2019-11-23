@@ -92,6 +92,9 @@ void alarmUpdate()
 		if(!toneIsPlaying()) {
 			alarmSounding = false;
 		}
+		else {
+			timeWakeUpDisplay();
+		}
 	}
 }
 

@@ -144,11 +144,12 @@ void displayUpdate()
 {
 	unsigned long Var32;
 
+	// Turning off the OE pin for the tube drivers first, so nothing else is done if display is turned off
+	bitClear(PORTB, PB4);
+
 	if(!powerOn) {
 		return;
 	}
-
-	bitClear(PORTB, PB4);
 
 	unsigned long digits=stringToDisplay.toInt();
 	Var32 = 0;
@@ -216,5 +217,7 @@ void displayUpdate()
 
 ISR(TIMER4_COMPA_vect)
 {
+	// We must enable interrupts as early as possible. Otherwise, the beeper will suffer
+	sei();
 	displayUpdate();
 }
