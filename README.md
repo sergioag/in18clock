@@ -19,7 +19,7 @@ Please also note that building has only been tested in macOS Catalina, though I 
 
 Supported Functionality
 =======================
-This firmware doesn't yet support all the features of the official firmware. Currently supported are:
+This firmware supports most of the features of the official firmware, plus some new options. The current list is:
 - Time display
 - Time edit
 - 12/24 hour format
@@ -33,8 +33,8 @@ This firmware doesn't yet support all the features of the official firmware. Cur
 - LED configuration, with 3 different settings: off, fireworks and fixed (you can configure the specific color from a palette of 262144).
 - Turn on/off time: allows selected a time range when your clock is completely powered down. This is done to avoid using the tubes at times you don't care (i.e. while sleeping or being out of the house/office) or because some people find difficult sleeping with all the light emitted by the clock.
 
-Currently unsupported:
-- GPS
+Unsupported features:
+- GPS (I don't have the GPS accessory, so I cannot develop support for it)
 - IR control
 
 Planned features:
