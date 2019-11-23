@@ -166,8 +166,6 @@ void menuIncrement()
 		if(menu[menuPosition].value > menu[menuPosition].maxValue) {
 			menu[menuPosition].value = menu[menuPosition].minValue;
 		}
-		debugOutput("Incrementing for ", menuPosition);
-		debugOutput("New value is ", menu[menuPosition].value);
 	}
 	toneKey();
 }
