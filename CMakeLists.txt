@@ -38,8 +38,8 @@ set(ARDUINO_CPU atmega2560)
 project(${PROJECT_NAME})
 
 # Define additional source and header files or default arduino sketch files
-set(${PROJECT_NAME}_SRCS date.cpp debug.cpp display.cpp ds18b20.cpp in18clock.cpp leds.cpp menu.cpp rtc.cpp temperature.cpp time.cpp utils.cpp)
-set(${PROJECT_NAME}_HDRS User_Setup.h date.h debug.h display.h ds18b20.h leds.h menu.h rtc.h temperature.h time.h utils.h)
+set(${PROJECT_NAME}_SRCS alarm.cpp date.cpp debug.cpp display.cpp ds18b20.cpp in18clock.cpp leds.cpp menu.cpp rtc.cpp temperature.cpp time.cpp tone.cpp utils.cpp)
+set(${PROJECT_NAME}_HDRS User_Setup.h alarm.h date.h debug.h display.h ds18b20.h leds.h menu.h rtc.h temperature.h time.h tone.h utils.h)
 
 ### Additional static libraries to include in the target.
 #set(${PROJECT_NAME}_LIBS )

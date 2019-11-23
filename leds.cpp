@@ -29,6 +29,12 @@
  *
  */
 #include <Adafruit_NeoPixel.h>
+#include "User_Setup.h"
+#include "debug.h"
+#include "display.h"
+#include "leds.h"
+#include "menu.h"
+#include "utils.h"
 
 #define PIN            6
 #define NUMPIXELS      8
@@ -111,37 +117,56 @@ void rotateFireWorks()
   if (rotator > 5) rotator = 0;
 }
 
+void ledsSet(int red, int green, int blue)
+{
+	red *= 4;
+	green *= 4;
+	blue *= 4;
+
+	for(int i=0;i<NUMPIXELS;i++)
+	{
+		pixels.setPixelColor(i, pixels.Color(red, green, blue));
+	}
+	pixels.show();
+}
+
 void ledsUpdate()
 {
 	if ((millis() - prevTime4FireWorks) > LEDsDelay)
 	{
-		rotateFireWorks(); //change color (by 1 step)
+		switch(menuGetValue(MENU_EDIT_LED_MODE)) {
+			case LEDS_OFF:
+				ledsOff();
+				break;
+			case LEDS_FIREWORKS:
+				rotateFireWorks(); //change color (by 1 step)
+				break;
+			case LEDS_FIXED:
+				ledsSet(menuGetValue(MENU_EDIT_LED_RED), menuGetValue(MENU_EDIT_LED_GREEN), menuGetValue(MENU_EDIT_LED_BLUE));
+				break;
+		}
 		prevTime4FireWorks = millis();
 	}
 }
 
-/*
-void setLEDsFromEEPROM()
+void ledsDisplay()
 {
-  int R,G,B;
-  R=EEPROM.read(LEDsRedValueEEPROMAddress);
-  G=EEPROM.read(LEDsGreenValueEEPROMAddress);
-  B=EEPROM.read(LEDsBlueValueEEPROMAddress);
-
-  for(int i=0;i<NUMPIXELS;i++)
-  {
-    pixels.setPixelColor(i, pixels.Color(R, G, B)); 
-  }
-  pixels.show();
-
-    // ********
-  Serial.println(F("Read from EEPROM"));
-  Serial.print(F("RED="));
-  Serial.println(R);
-  Serial.print(F("GREEN="));
-  Serial.println(G);
-  Serial.print(F("Blue="));
-  Serial.println(B);
-  // ********
+	if(menuGetCurrentPosition() == MENU_EDIT_LED_MODE) {
+		displaySetValue("00" + PreZero(menuGetValue(MENU_EDIT_LED_MODE)) + "00");
+	}
+	else {
+		displaySetValue(PreZero(menuGetValue(MENU_EDIT_LED_RED))
+				+ PreZero(menuGetValue(MENU_EDIT_LED_GREEN))
+				+ PreZero(menuGetValue(MENU_EDIT_LED_BLUE)));
+	}
+	displaySetUpperDots(false);
+	displaySetLowerDots(false);
 }
-*/
+
+void ledsOnSave()
+{
+	menuSave(MENU_EDIT_LED_MODE);
+	menuSave(MENU_EDIT_LED_RED);
+	menuSave(MENU_EDIT_LED_GREEN);
+	menuSave(MENU_EDIT_LED_BLUE);
+}

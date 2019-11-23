@@ -28,20 +28,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#ifndef IN18CLOCK_LEDS_H
-#define IN18CLOCK_LEDS_H
 
-#define LEDS_OFF	0
-#define LEDS_FIREWORKS	1
-#define LEDS_FIXED	2
+#ifndef IN18CLOCK_TONE_H
+#define IN18CLOCK_TONE_H
 
-void ledsSetup();
-void ledsOff();
-void ledsTest();
-void ledsUpdate();
+void toneSetup();
+void toneKey();
+void tonePlay(char *song);
+void toneUpdate();
+void toneStop();
+boolean toneIsPlaying();
 
-// Menu-related functions
-void ledsDisplay();
-void ledsOnSave();
-
-#endif //IN18CLOCK_LEDS_H
+#endif //IN18CLOCK_TONE_H

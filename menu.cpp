@@ -31,15 +31,15 @@
 #include <Arduino.h>
 #include <ClickButton.h>
 #include <EEPROM.h>
-#include <Tone.h>
+#include "alarm.h"
 #include "debug.h"
-#include "menu.h"
 #include "display.h"
+#include "menu.h"
+#include "tone.h"
 
 #define pinModeButton	A0
 #define pinUp 		A2
 #define pinDown 	A1
-#define pinBuzzer 	2
 
 #define CLICK_LONG	-1
 #define CLICK_SHORT	1
@@ -56,7 +56,6 @@ unsigned long timeLastInput = 0;
 
 
 static menu_struct *menu;
-Tone tone1;
 
 
 void menuSetPosition(int newPosition)
@@ -67,8 +66,6 @@ void menuSetPosition(int newPosition)
 
 void menuSetup(menu_struct *new_menu, int numElements)
 {
-	pinMode(pinBuzzer, OUTPUT);
-	tone1.begin(pinBuzzer);
 
 	modeButton.debounceTime   = 20;   // Debounce timer in ms
 	modeButton.multiclickTime = 30;  // Time limit for multi clicks
@@ -103,7 +100,7 @@ void menuSetup(menu_struct *new_menu, int numElements)
 void menuTryEdit()
 {
 	if(menu[menuPosition].firstChild != NO_CHILD && (!menu[menuPosition].onEditHandler || menu[menuPosition].onEditHandler())) {
-		tone1.play(1000, 100);
+		toneKey();
 		menuSetPosition(menu[menuPosition].firstChild);
 	}
 }
@@ -124,7 +121,7 @@ void menuBack()
 void menuNext()
 {
 	int newMenuPosition = menuPosition + 1;
-	tone1.play(1000, 100);
+	toneKey();
 
 	if(menu[menuPosition].parent == NO_PARENT) {
 		/*
@@ -166,7 +163,7 @@ void menuIncrement()
 		debugOutput("Incrementing for ", menuPosition);
 		debugOutput("New value is ", menu[menuPosition].value);
 	}
-	tone1.play(1000, 100);
+	toneKey();
 }
 
 void menuDecrement()
@@ -180,7 +177,7 @@ void menuDecrement()
 			menu[menuPosition].value = menu[menuPosition].maxValue;
 		}
 	}
-	tone1.play(1000, 100);
+	toneKey();
 }
 
 void menuUpdate()
@@ -193,31 +190,39 @@ void menuUpdate()
 	upButton.Update();
 	downButton.Update();
 
-	if(modeButton.clicks == CLICK_LONG) {
-		timeLastInput = millis();
-		menuTryEdit();
-		return;
+	if(alarmIsSounding()) {
+		// When alarm is sounding, any button stops it
+		if(modeButton.clicks != 0 || upButton.clicks != 0 || downButton.clicks != 0) {
+			alarmStop();
+		}
 	}
-	else if(modeButton.clicks == CLICK_SHORT) {
-		timeLastInput = millis();
-		menuNext();
-		return;
-	}
-	else if(upButton.clicks == CLICK_LONG) {
-		// TODO: Do something with long up clicks
-	}
-	else if(upButton.clicks == CLICK_SHORT) {
-		timeLastInput = millis();
-		menuIncrement();
-		return;
-	}
-	else if(downButton.clicks == CLICK_LONG) {
-		// TODO: Do something with long down clicks
-	}
-	else if(downButton.clicks == CLICK_SHORT) {
-		timeLastInput = millis();
-		menuDecrement();
-		return;
+	else {
+		if(modeButton.clicks == CLICK_LONG) {
+			timeLastInput = millis();
+			menuTryEdit();
+			return;
+		}
+		else if(modeButton.clicks == CLICK_SHORT) {
+			timeLastInput = millis();
+			menuNext();
+			return;
+		}
+		else if(upButton.clicks == CLICK_LONG) {
+			// TODO: Do something with long up clicks
+		}
+		else if(upButton.clicks == CLICK_SHORT) {
+			timeLastInput = millis();
+			menuIncrement();
+			return;
+		}
+		else if(downButton.clicks == CLICK_LONG) {
+			// TODO: Do something with long down clicks
+		}
+		else if(downButton.clicks == CLICK_SHORT) {
+			timeLastInput = millis();
+			menuDecrement();
+			return;
+		}
 	}
 
 	if (menuPosition != 0 && millis() - timeLastInput > INPUT_TIMEOUT) {

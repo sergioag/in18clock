@@ -40,4 +40,6 @@ void timeEditDisplay();
 boolean timeEdit();
 void timeOnSave();
 
+String getTimeString(int hours, int minutes, int seconds);
+
 #endif //IN18CLOCK_TIME_H
