@@ -62,4 +62,8 @@ int menuGetValue(int index);
 void menuSetBlinkPattern(int index, int blinkPattern);
 int menuSave(int index);
 
+int menuModeButtonState();
+int menuUpButtonState();
+int menuDownButtonState();
+
 #endif //IN18CLOCK_MENU_H

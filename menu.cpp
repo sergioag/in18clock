@@ -33,6 +33,7 @@
 #include <EEPROM.h>
 #include "alarm.h"
 #include "display.h"
+#include "ir.h"
 #include "menu.h"
 #include "pins.h"
 #include "tone.h"
@@ -80,6 +81,8 @@ void menuSetup(menu_struct *new_menu, int numElements)
 	downButton.debounceTime   = 20;   // Debounce timer in ms
 	downButton.multiclickTime = 30;  // Time limit for multi clicks
 	downButton.longClickTime  = 2000; // time until "held-down clicks" register
+
+	irSetup();
 
 	menu = new_menu;
 	numMenuElements = numElements;
@@ -189,6 +192,7 @@ void menuUpdate()
 	modeButton.Update();
 	upButton.Update();
 	downButton.Update();
+	irUpdate();
 
 	if(alarmIsSounding()) {
 		// When alarm is sounding, any button stops it
@@ -197,31 +201,34 @@ void menuUpdate()
 		}
 	}
 	else {
-		if(modeButton.clicks == CLICK_LONG) {
-			timeLastInput = millis();
-			menuTryEdit();
-			return;
+		switch(menuModeButtonState()) {
+			case CLICK_LONG:
+				timeLastInput = millis();
+				menuTryEdit();
+				return;
+			case CLICK_SHORT:
+				timeLastInput = millis();
+				menuNext();
+				return;
+
 		}
-		else if(modeButton.clicks == CLICK_SHORT) {
-			timeLastInput = millis();
-			menuNext();
-			return;
+		switch(menuUpButtonState()) {
+			case CLICK_LONG:
+				// TODO: Do something with long up clicks
+				break;
+			case CLICK_SHORT:
+				timeLastInput = millis();
+				menuIncrement();
+				return;
 		}
-		else if(upButton.clicks == CLICK_LONG) {
-			// TODO: Do something with long up clicks
-		}
-		else if(upButton.clicks == CLICK_SHORT) {
-			timeLastInput = millis();
-			menuIncrement();
-			return;
-		}
-		else if(downButton.clicks == CLICK_LONG) {
-			// TODO: Do something with long down clicks
-		}
-		else if(downButton.clicks == CLICK_SHORT) {
-			timeLastInput = millis();
-			menuDecrement();
-			return;
+		switch(menuDownButtonState()) {
+			case CLICK_LONG:
+				// TODO: Do something with long down clicks
+				break;
+			case CLICK_SHORT:
+				timeLastInput = millis();
+				menuDecrement();
+				return;
 		}
 	}
 
@@ -255,5 +262,35 @@ int menuSave(int index)
 {
 	if(menu[index].eepromOffset != NO_LOAD) {
 		EEPROM.write(menu[index].eepromOffset, menu[index].value);
+	}
+}
+
+int menuModeButtonState()
+{
+	if(modeButton.clicks) {
+		return modeButton.clicks;
+	}
+	else {
+		return irModeButton();
+	}
+}
+
+int menuUpButtonState()
+{
+	if(upButton.clicks) {
+		return upButton.clicks;
+	}
+	else {
+		return irUpButton();
+	}
+}
+
+int menuDownButtonState()
+{
+	if(downButton.clicks) {
+		return downButton.clicks;
+	}
+	else {
+		return irDownButton();
 	}
 }

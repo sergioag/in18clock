@@ -29,30 +29,19 @@
  *
  */
 
-#ifndef IN18CLOCK_PINS_H
-#define IN18CLOCK_PINS_H
+#ifndef IN18CLOCK_IR_H
+#define IN18CLOCK_IR_H
 
-/* RTC uses SDA and SCL pins for its I2C interface */
+// buttons codes for remote controller Sony RM-X151
+#define IR_BUTTON_UP_CODE 0x6621
+#define IR_BUTTON_DOWN_CODE 0x2621
+#define IR_BUTTON_MODE_CODE 0x7121
 
-/* Buzzer */
-#define PIN_BUZZER			2
-/* IR Control */
-#define PIN_IR_CONTROL			4
-/* Adafruit LEDs */
-#define PIN_LEDS			6
-/* Temperature Sensor: OneWire interface */
-#define PIN_DS18B20			7
-/* Display: This pin controls the OE (Output Enable) of the shift registers that drive the tubes */
-#define PIN_DISPLAY_ENABLE		10
-/* Display SPI interface */
-#define PIN_DISPLAY_MOSI		11
-#define PIN_DISPLAY_SCK			13
 
-/* Input: Mode button */
-#define PIN_BUTTON_MODE			A0
-/* Input: Down button */
-#define PIN_BUTTON_DOWN 		A1
-/* Input: Up button */
-#define PIN_BUTTON_UP 			A2
+void irSetup();
+void irUpdate();
+int irModeButton();
+int irUpButton();
+int irDownButton();
 
-#endif //IN18CLOCK_PINS_H
+#endif //IN18CLOCK_IR_H
