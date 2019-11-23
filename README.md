@@ -32,13 +32,13 @@ This firmware supports most of the features of the official firmware, plus some 
 - Alert with selectable songs
 - LED configuration, with 3 different settings: off, fireworks and fixed (you can configure the specific color from a palette of 262144).
 - Turn on/off time: allows selected a time range when your clock is completely powered down. This is done to avoid using the tubes at times you don't care (i.e. while sleeping or being out of the house/office) or because some people find difficult sleeping with all the light emitted by the clock.
+- IR control, supporting Sony RM-X153 remotes (only uses Mode, Up and Down keys).
 
 Unsupported features:
 - GPS (I don't have the GPS accessory, so I cannot develop support for it)
-- IR control
 
 Planned features:
-- Extended IR control support: same support as official version, plus some other keys that may be useful.
+- Extended IR control support: use some other keys that may be useful for easier navigation (maybe?).
 
 How To Use
 ==========
@@ -153,3 +153,4 @@ This repository includes the following third-party libraries, found in the "libs
 | OneWire           | 2.3.2      | BSD-like | (https://github.com/PaulStoffregen/OneWire)      |
 | Time              | 1.5        | LGPLv2.1 | (http://playground.arduino.cc/code/time)         |
 | Tone              | 0006       | GPLv3    | (https://github.com/bhagman/Tone)                |
+| IRremote          | 2.0.1      | LGPLv2.1 | (https://github.com/shirriff/Arduino-IRremote)   |
