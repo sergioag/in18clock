@@ -30,10 +30,9 @@
  */
 #include <OneWire.h>
 #include "ds18b20.h"
+#include "pins.h"
 
-#define pinTemp 7
-
-OneWire ds(pinTemp);
+OneWire ds(PIN_DS18B20);
 
 boolean isPresent = false;
 

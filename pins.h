@@ -28,4 +28,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#include "utils.h"
+
+#ifndef IN18CLOCK_PINS_H
+#define IN18CLOCK_PINS_H
+
+/* RTC uses SDA and SCL pins for its I2C interface */
+
+/* Buzzer */
+#define PIN_BUZZER			2
+/* Adafruit LEDs */
+#define PIN_LEDS			6
+/* Temperature Sensor: OneWire interface */
+#define PIN_DS18B20			7
+/* Display: This pin controls the OE (Output Enable) of the shift registers that drive the tubes */
+#define PIN_DISPLAY_ENABLE		10
+/* Display SPI interface */
+#define PIN_DISPLAY_MOSI		11
+#define PIN_DISPLAY_SCK			13
+
+/* Input: Mode button */
+#define PIN_BUTTON_MODE			A0
+/* Input: Down button */
+#define PIN_BUTTON_DOWN 		A1
+/* Input: Up button */
+#define PIN_BUTTON_UP 			A2
+
+#endif //IN18CLOCK_PINS_H

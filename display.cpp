@@ -31,6 +31,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include "display.h"
+#include "pins.h"
 
 #define UpperDotsMask 0x80000000
 #define LowerDotsMask 0x40000000
@@ -54,7 +55,7 @@ boolean upperDots = false, lowerDots = false;
 
 void displaySetup()
 {
-	pinMode(10, OUTPUT);
+	pinMode(PIN_DISPLAY_ENABLE, OUTPUT);
 
 	SPI.begin();
 	SPI.setDataMode (SPI_MODE2); // Mode 3 SPI

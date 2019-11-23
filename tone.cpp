@@ -31,9 +31,9 @@
 
 #include <Arduino.h>
 #include <Tone.h>
+#include "pins.h"
 #include "tone.h"
 
-#define pinBuzzer 	2
 #define OCTAVE_OFFSET 0
 
 int notes[] = { 0,
@@ -57,8 +57,8 @@ byte scale;
 
 void toneSetup()
 {
-	pinMode(pinBuzzer, OUTPUT);
-	tone1.begin(pinBuzzer);
+	pinMode(PIN_BUZZER, OUTPUT);
+	tone1.begin(PIN_BUZZER);
 	currentSong = NULL;
 }
 

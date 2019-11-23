@@ -30,15 +30,12 @@
  */
 #include <Adafruit_NeoPixel.h>
 #include "User_Setup.h"
-#include "debug.h"
 #include "display.h"
 #include "leds.h"
 #include "menu.h"
-#include "onoff.h"
-#include "time.h"
+#include "pins.h"
 #include "utils.h"
 
-#define PIN            6
 #define NUMPIXELS      8
 #define LEDsSpeed      10
 const int LEDsDelay=40;
@@ -57,7 +54,7 @@ int fireworks[] = {0, 0, 1, //1
 		   0, -1, 0
 }; //array with RGB rules (0 - do nothing, -1 - decrese, +1 - increse
 
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN_LEDS, NEO_GRB + NEO_KHZ800);
 
 void ledsSetup()
 {

@@ -32,23 +32,19 @@
 #include <ClickButton.h>
 #include <EEPROM.h>
 #include "alarm.h"
-#include "debug.h"
 #include "display.h"
 #include "menu.h"
+#include "pins.h"
 #include "tone.h"
-
-#define pinModeButton	A0
-#define pinUp 		A2
-#define pinDown 	A1
 
 #define CLICK_LONG	-1
 #define CLICK_SHORT	1
 
 #define INPUT_TIMEOUT	10000
 
-ClickButton modeButton(pinModeButton, LOW, CLICKBTN_PULLUP);
-ClickButton upButton(pinUp, LOW, CLICKBTN_PULLUP);
-ClickButton downButton(pinDown, LOW, CLICKBTN_PULLUP);
+ClickButton modeButton(PIN_BUTTON_MODE, LOW, CLICKBTN_PULLUP);
+ClickButton upButton(PIN_BUTTON_UP, LOW, CLICKBTN_PULLUP);
+ClickButton downButton(PIN_BUTTON_DOWN, LOW, CLICKBTN_PULLUP);
 
 int menuPosition = 0;
 int numMenuElements = 0;
