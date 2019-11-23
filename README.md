@@ -30,13 +30,11 @@ This firmware doesn't yet support all the features of the official firmware. Cur
 - Temperature sensor
 - Temperature in Celsius or Fahrenheit
 - Anti-poisoning slot-effect each minute
-- "Fireworks" effect for LEDs (though it's currently commented out)
+- Alert with selectable songs
+- LED configuration, with 3 different settings: off, fireworks and fixed (you can configure the specific color from a palette of 262144).
 
 Currently unsupported:
 - GPS
-- Alarm
-- LED configuration
-- Songs
 - IR control
 
 Planned features:
