@@ -141,3 +141,15 @@ However, there are some exceptions:
 - If the alarm sounds, the display (and LEDs) will turn on and kept turned on while the alarm is sounding. After the alarm finishes or it is disabled manually, the clock will wait for 10 seconds before turning off again.
 - When you initially plug in your clock, the power on test will execute normally. That is, the tubes and LEDs will turn on. After that step is finished, it will power off according to the configuration.
 - Power off doesn't apply to other modes outside of Time display. This is by design because the clock will return to that mode if left unattended and therefore power off shortly afterwards.
+
+Third-Party Libraries
+=====================
+This repository includes the following third-party libraries, found in the "libs" directory:
+
+| Library           | Version    | License  | URL                                              |
+| ----------------- | ---------- | -------- | ------------------------------------------------ |
+| Adafruit_NeoPixel | 1.2.3      | LGPLv3   | (https://github.com/adafruit/Adafruit_NeoPixel)  |
+| ClickButton       | 2013.08.29 | GPLv3    | (https://code.google.com/archive/p/clickbutton/) |
+| OneWire           | 2.3.2      | BSD-like | (https://github.com/PaulStoffregen/OneWire)      |
+| Time              | 1.5        | LGPLv2.1 | (http://playground.arduino.cc/code/time)         |
+| Tone              | 0006       | GPLv3    | (https://github.com/bhagman/Tone)                |
