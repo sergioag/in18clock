@@ -51,24 +51,6 @@ boolean ds18b20IsPresent()
 	return isPresent;
 }
 
-/*float getTemperature (boolean bTempFormat)
-{
-  byte TempRawData[2];
-  ds.reset();
-  ds.write(0xCC); //skip ROM command
-  ds.write(0x44); //send make convert to all devices
-  ds.reset();
-  ds.write(0xCC); //skip ROM command
-  ds.write(0xBE); //send request to all devices
-
-  float celsius = (float)raw / 16.0;
-  float fDegrees;
-  if (!bTempFormat) fDegrees = celsius * 10;
-  else fDegrees = (celsius * 1.8 + 32.0) * 10;
-  //Serial.println(fDegrees);
-  return fDegrees;
-}*/
-
 float ds18b20ReadTemperature()
 {
 	byte TempRawData[2];
