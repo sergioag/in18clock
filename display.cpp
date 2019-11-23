@@ -85,6 +85,11 @@ void displayPowerOff()
 	powerOn = false;
 }
 
+boolean displayIsPoweredOn()
+{
+	return powerOn;
+}
+
 void displaySetUpperDots(boolean status)
 {
 	upperDots = status;

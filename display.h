@@ -38,5 +38,6 @@ void displaySetUpperDots(boolean status);
 void displaySetLowerDots(boolean status);
 void displaySetBlinkMask(byte newBlinkMask);
 void displaySetValue(String value);
+boolean displayIsPoweredOn();
 
 #endif //IN18CLOCK_DISPLAY_H

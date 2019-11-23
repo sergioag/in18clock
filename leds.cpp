@@ -35,6 +35,7 @@
 #include "leds.h"
 #include "menu.h"
 #include "onoff.h"
+#include "time.h"
 #include "utils.h"
 
 #define PIN            6
@@ -133,20 +134,25 @@ void ledsSet(int red, int green, int blue)
 
 void ledsUpdate()
 {
-	if ((millis() - prevTime4FireWorks) > LEDsDelay)
-	{
-		switch(menuGetValue(MENU_EDIT_LED_MODE)) {
-			case LEDS_OFF:
-				ledsOff();
-				break;
-			case LEDS_FIREWORKS:
-				rotateFireWorks(); //change color (by 1 step)
-				break;
-			case LEDS_FIXED:
-				ledsSet(menuGetValue(MENU_EDIT_LED_RED), menuGetValue(MENU_EDIT_LED_GREEN), menuGetValue(MENU_EDIT_LED_BLUE));
-				break;
+	if(!displayIsPoweredOn()) {
+		ledsOff();
+	}
+	else {
+		if ((millis() - prevTime4FireWorks) > LEDsDelay)
+		{
+			switch(menuGetValue(MENU_EDIT_LED_MODE)) {
+				case LEDS_OFF:
+					ledsOff();
+					break;
+				case LEDS_FIREWORKS:
+					rotateFireWorks(); //change color (by 1 step)
+					break;
+				case LEDS_FIXED:
+					ledsSet(menuGetValue(MENU_EDIT_LED_RED), menuGetValue(MENU_EDIT_LED_GREEN), menuGetValue(MENU_EDIT_LED_BLUE));
+					break;
+			}
+			prevTime4FireWorks = millis();
 		}
-		prevTime4FireWorks = millis();
 	}
 }
 
