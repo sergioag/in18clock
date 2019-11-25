@@ -196,7 +196,7 @@ void menuUpdate()
 
 	if(alarmIsSounding()) {
 		// When alarm is sounding, any button stops it
-		if(modeButton.clicks != 0 || upButton.clicks != 0 || downButton.clicks != 0) {
+		if(menuModeButtonState() != 0 || menuUpButtonState() != 0 || menuDownButtonState() != 0) {
 			alarmStop();
 		}
 	}
