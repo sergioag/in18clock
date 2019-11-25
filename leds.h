@@ -39,6 +39,7 @@ void ledsSetup();
 void ledsOff();
 void ledsTest();
 void ledsUpdate();
+void ledsSet(int red, int green, int blue);
 
 // Menu-related functions
 void ledsDisplay();

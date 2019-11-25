@@ -55,78 +55,66 @@ int fireworks[] = {0, 0, 1, //1
 }; //array with RGB rules (0 - do nothing, -1 - decrese, +1 - increse
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN_LEDS, NEO_GRB + NEO_KHZ800);
+int currentRed = 0, currentGreen = 0, currentBlue = 0;
 
 void ledsSetup()
 {
-  pixels.begin(); // This initializes the NeoPixel library.
-  pixels.setBrightness(50);
+	pixels.begin(); // This initializes the NeoPixel library.
+	pixels.setBrightness(50);
 }
 
 void ledsOff()
 {
-  for(int i=0;i<NUMPIXELS;i++)
-  {
-    pixels.setPixelColor(i, pixels.Color(0, 0, 0)); 
-  }
-  pixels.show();
+	for(int i=0;i<NUMPIXELS;i++)
+	{
+		pixels.setPixelColor(i, pixels.Color(0, 0, 0));
+	}
+	pixels.show();
 }
 
 void ledsTest()
 {
-  for(int i=0;i<NUMPIXELS;i++)
-  {
-    pixels.setPixelColor(i, pixels.Color(255, 0, 0)); 
-  }
-  pixels.show(); // This sends the updated pixel color to the hardware.
-  delay(1000);
-  for(int i=0;i<NUMPIXELS;i++)
-  {
-    pixels.setPixelColor(i, pixels.Color(0, 255, 0)); 
-  }
-  pixels.show(); // This sends the updated pixel color to the hardware.
-  delay(1000);
-  for(int i=0;i<NUMPIXELS;i++)
-  {
-    pixels.setPixelColor(i, pixels.Color(0, 0, 255)); 
-  }
-  pixels.show(); // This sends the updated pixel color to the hardware.
-  delay(1000);
-  ledsOff();
+	ledsSet(255,0,0);
+	delay(1000);
+	ledsSet(0,255,0);
+	delay(1000);
+	ledsSet(0, 0, 255);
+	delay(1000);
+	ledsOff();
 }
 
 void rotateFireWorks()
 {
-  RedLight = RedLight + LEDsSpeed * fireworks[rotator * 3];
-  GreenLight = GreenLight + LEDsSpeed * fireworks[rotator * 3 + 1];
-  BlueLight = BlueLight + LEDsSpeed * fireworks[rotator * 3 + 2];
+	RedLight = RedLight + LEDsSpeed * fireworks[rotator * 3];
+	GreenLight = GreenLight + LEDsSpeed * fireworks[rotator * 3 + 1];
+	BlueLight = BlueLight + LEDsSpeed * fireworks[rotator * 3 + 2];
 
-  for(int i=0;i<NUMPIXELS;i++)
-  {
-    pixels.setPixelColor(i, pixels.Color(RedLight, GreenLight, BlueLight)); 
-  }
+	ledsSet(RedLight, GreenLight, BlueLight);
 
-  pixels.show(); // This sends the updated pixel color to the hardware.
-  
-  cycle = cycle + 1;
-  if (cycle == 255/LEDsSpeed)
-  {
-    rotator = rotator + 1;
-    cycle = 0;
-  }
-  if (rotator > 5) rotator = 0;
+	cycle = cycle + 1;
+	if (cycle == 255/LEDsSpeed)
+	{
+		rotator = rotator + 1;
+		cycle = 0;
+	}
+	if (rotator > 5) rotator = 0;
 }
 
 void ledsSet(int red, int green, int blue)
 {
-	red *= 4;
-	green *= 4;
-	blue *= 4;
+	// Since NeoPixel library disables interrupts, we want to keep the calls to it to a minimum. Only call it
+	// if we actually need to change colors.
+	if(red != currentRed || green != currentGreen || blue != currentBlue) {
+		for(int i=0;i<NUMPIXELS;i++)
+		{
+			pixels.setPixelColor(i, pixels.Color(red, green, blue));
+		}
+		pixels.show();
 
-	for(int i=0;i<NUMPIXELS;i++)
-	{
-		pixels.setPixelColor(i, pixels.Color(red, green, blue));
+		currentRed = red;
+		currentGreen = green;
+		currentBlue = blue;
 	}
-	pixels.show();
 }
 
 void ledsUpdate()
@@ -145,7 +133,7 @@ void ledsUpdate()
 					rotateFireWorks(); //change color (by 1 step)
 					break;
 				case LEDS_FIXED:
-					ledsSet(menuGetValue(MENU_EDIT_LED_RED), menuGetValue(MENU_EDIT_LED_GREEN), menuGetValue(MENU_EDIT_LED_BLUE));
+					ledsSet(menuGetValue(MENU_EDIT_LED_RED)*4, menuGetValue(MENU_EDIT_LED_GREEN)*4, menuGetValue(MENU_EDIT_LED_BLUE)*4);
 					break;
 			}
 			prevTime4FireWorks = millis();
