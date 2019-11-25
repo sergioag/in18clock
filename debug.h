@@ -33,5 +33,5 @@
 
 void debugSetup();
 void debugOutput(String str);
-void debugOutput(String str, int value);
+void debugOutput(String str, unsigned long value);
 #endif //IN18CLOCK_DEBUG_H

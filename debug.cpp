@@ -41,7 +41,7 @@ void debugOutput(String str)
 	Serial.println(str);
 }
 
-void debugOutput(String str, int value)
+void debugOutput(String str, unsigned long value)
 {
 	Serial.print(str);
 	Serial.println(value);
