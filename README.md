@@ -142,6 +142,11 @@ However, there are some exceptions:
 - When you initially plug in your clock, the power on test will execute normally. That is, the tubes and LEDs will turn on. After that step is finished, it will power off according to the configuration.
 - Power off doesn't apply to other modes outside of Time display. This is by design because the clock will return to that mode if left unattended and therefore power off shortly afterwards.
 
+Known Issues
+============
+No major issues are known. However, these minor issues exist:
+- When clock is off due to turn off time, IR control doesn't work. Cause is unknown. Nothing obvious.
+
 Third-Party Libraries
 =====================
 This repository includes the following third-party libraries, found in the "libs" directory:
