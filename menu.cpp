@@ -70,6 +70,10 @@ void menuSetPosition(int newPosition)
 void menuSetup(menu_struct *new_menu, int numElements)
 {
 
+	pinMode(PIN_BUTTON_MODE,  INPUT_PULLUP);
+	pinMode(PIN_BUTTON_UP,  INPUT_PULLUP);
+	pinMode(PIN_BUTTON_DOWN,  INPUT_PULLUP);
+
 	modeButton.debounceTime   = 20;   // Debounce timer in ms
 	modeButton.multiclickTime = 30;  // Time limit for multi clicks
 	modeButton.longClickTime  = 2000; // time until "held-down clicks" register
