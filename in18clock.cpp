@@ -116,9 +116,8 @@ void setup() {
 	ledsSetup();
 	rtcGetTime();
 	ds18b20Setup();
-	menuSetup(menu, sizeof(menu)/sizeof(menu_struct));
 	doTest();
-	ledsOff();
+	menuSetup(menu, sizeof(menu)/sizeof(menu_struct));
 	alarmSetup();
 }
 
