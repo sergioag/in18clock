@@ -1,30 +1,50 @@
-/* $Id: Tone.cpp 119 2010-07-17 18:56:36Z bhagman@roguerobotics.com $
+/*
+|| @author         Brett Hagman <bhagman@wiring.org.co>
+|| @contribution   Fotis Papadopoulos <fpapadopou@gmail.com>
+|| @url            http://wiring.org.co/
+|| @url            http://roguerobotics.com/
+||
+|| @description
+|| | A Software Digital Square Wave Tone Generation Library
+|| |
+|| | Written by Brett Hagman
+|| | http://www.roguerobotics.com/
+|| | bhagman@roguerobotics.com, bhagman@wiring.org.co
+|| |
+|| | This is a Wiring Framework (Arduino) library to produce square-wave
+|| | tones on an arbitrary pin.
+|| |
+|| | You can make multiple instances of the Tone object, to create tones on
+|| | different pins.
+|| |
+|| | The number of tones that can be generated at the same time is limited
+|| | by the number of hardware timers available on the hardware.
+|| | (e.g. ATmega328 has 3 available timers, and the ATmega1280 has 6 timers)
+|| |
+|| | A simplified (single tone) version of this library has been included
+|| | in the Wiring Framework since Wiring 0025 and in the Arduino distribution
+|| | since Arduino 0018.
+|| |
+|| #
+||
+|| @license Please see the accompanying LICENSE.txt file for this project.
+||
+|| @name Software PWM Library
+|| @type Library
+|| @target Atmel AVR 8 Bit
+||
+|| @version 1.0.0
+||
+*/
 
-  A Tone Generator Library
+#if defined(WIRING)
+ #include <Wiring.h>
+#elif ARDUINO >= 100
+ #include <Arduino.h>
+#else
+ #include <WProgram.h>
+#endif
 
-  Written by Brett Hagman
-  http://www.roguerobotics.com/
-  bhagman@roguerobotics.com
-
-    This library is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-*************************************************/
-
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
-#include <Arduino.h>
-#include <pins_arduino.h>
 #include "Tone.h"
 
 #if defined(__AVR_ATmega8__)
@@ -93,10 +113,151 @@ const uint8_t PROGMEM tone_pin_to_timer_PGM[] = { 2, 1, 0 };
 #endif
 
 
-
 // Initialize our pin count
 
 uint8_t Tone::_tone_pin_count = 0;
+
+
+// Interrupt routines
+#if !defined(__AVR_ATmega8__)
+#ifdef WIRING
+void Tone_Timer0_Interrupt(void)
+#else
+ISR(TIMER0_COMPA_vect)
+#endif
+{
+  if (timer0_toggle_count != 0)
+  {
+    // toggle the pin
+    *timer0_pin_port ^= timer0_pin_mask;
+
+    if (timer0_toggle_count > 0)
+      timer0_toggle_count--;
+  }
+  else
+  {
+    TIMSK0 &= ~(1 << OCIE0A);                 // disable the interrupt
+    *timer0_pin_port &= ~(timer0_pin_mask);   // keep pin low after stop
+  }
+}
+#endif
+
+
+#ifdef WIRING
+void Tone_Timer1_Interrupt(void)
+#else
+ISR(TIMER1_COMPA_vect)
+#endif
+{
+  if (timer1_toggle_count != 0)
+  {
+    // toggle the pin
+    *timer1_pin_port ^= timer1_pin_mask;
+
+    if (timer1_toggle_count > 0)
+      timer1_toggle_count--;
+  }
+  else
+  {
+    TIMSK1 &= ~(1 << OCIE1A);                 // disable the interrupt
+    *timer1_pin_port &= ~(timer1_pin_mask);   // keep pin low after stop
+  }
+}
+
+
+#ifdef WIRING
+void Tone_Timer2_Interrupt(void)
+#else
+ISR(TIMER2_COMPA_vect)
+#endif
+{
+  int32_t temp_toggle_count = timer2_toggle_count;
+
+  if (temp_toggle_count != 0)
+  {
+    // toggle the pin
+    *timer2_pin_port ^= timer2_pin_mask;
+
+    if (temp_toggle_count > 0)
+      temp_toggle_count--;
+  }
+  else
+  {
+    TIMSK2 &= ~(1 << OCIE2A);                 // disable the interrupt
+    *timer2_pin_port &= ~(timer2_pin_mask);   // keep pin low after stop
+  }
+  
+  timer2_toggle_count = temp_toggle_count;
+}
+
+
+
+#if defined(__AVR_ATmega1280__)
+
+#ifdef WIRING
+void Tone_Timer3_Interrupt(void)
+#else
+ISR(TIMER3_COMPA_vect)
+#endif
+{
+  if (timer3_toggle_count != 0)
+  {
+    // toggle the pin
+    *timer3_pin_port ^= timer3_pin_mask;
+
+    if (timer3_toggle_count > 0)
+      timer3_toggle_count--;
+  }
+  else
+  {
+    TIMSK3 &= ~(1 << OCIE3A);                 // disable the interrupt
+    *timer3_pin_port &= ~(timer3_pin_mask);   // keep pin low after stop
+  }
+}
+
+#ifdef WIRING
+void Tone_Timer4_Interrupt(void)
+#else
+ISR(TIMER4_COMPA_vect)
+#endif
+{
+  if (timer4_toggle_count != 0)
+  {
+    // toggle the pin
+    *timer4_pin_port ^= timer4_pin_mask;
+
+    if (timer4_toggle_count > 0)
+      timer4_toggle_count--;
+  }
+  else
+  {
+    TIMSK4 &= ~(1 << OCIE4A);                 // disable the interrupt
+    *timer4_pin_port &= ~(timer4_pin_mask);   // keep pin low after stop
+  }
+}
+
+#ifdef WIRING
+void Tone_Timer5_Interrupt(void)
+#else
+ISR(TIMER5_COMPA_vect)
+#endif
+{
+  if (timer5_toggle_count != 0)
+  {
+    // toggle the pin
+    *timer5_pin_port ^= timer5_pin_mask;
+
+    if (timer5_toggle_count > 0)
+      timer5_toggle_count--;
+  }
+  else
+  {
+    TIMSK5 &= ~(1 << OCIE5A);                 // disable the interrupt
+    *timer5_pin_port &= ~(timer5_pin_mask);   // keep pin low after stop
+  }
+}
+
+#endif
 
 
 void Tone::begin(uint8_t tonePin)
@@ -122,6 +283,9 @@ void Tone::begin(uint8_t tonePin)
         bitWrite(TCCR0B, CS00, 1);
         timer0_pin_port = portOutputRegister(digitalPinToPort(_pin));
         timer0_pin_mask = digitalPinToBitMask(_pin);
+#ifdef WIRING
+        Timer0.attachInterrupt(INTERRUPT_COMPARE_MATCH_A, Tone_Timer0_Interrupt);
+#endif
         break;
 #endif
 
@@ -133,6 +297,9 @@ void Tone::begin(uint8_t tonePin)
         bitWrite(TCCR1B, CS10, 1);
         timer1_pin_port = portOutputRegister(digitalPinToPort(_pin));
         timer1_pin_mask = digitalPinToBitMask(_pin);
+#ifdef WIRING
+        Timer1.attachInterrupt(INTERRUPT_COMPARE_MATCH_A, Tone_Timer1_Interrupt);
+#endif
         break;
       case 2:
         // 8 bit timer
@@ -142,7 +309,10 @@ void Tone::begin(uint8_t tonePin)
         bitWrite(TCCR2B, CS20, 1);
         timer2_pin_port = portOutputRegister(digitalPinToPort(_pin));
         timer2_pin_mask = digitalPinToBitMask(_pin);
-        break;
+#ifdef WIRING
+        Timer2.attachInterrupt(INTERRUPT_COMPARE_MATCH_A, Tone_Timer2_Interrupt);
+#endif
+      break;
 
 #if defined(__AVR_ATmega1280__)
       case 3:
@@ -153,6 +323,9 @@ void Tone::begin(uint8_t tonePin)
         bitWrite(TCCR3B, CS30, 1);
         timer3_pin_port = portOutputRegister(digitalPinToPort(_pin));
         timer3_pin_mask = digitalPinToBitMask(_pin);
+#ifdef WIRING
+        Timer3.attachInterrupt(INTERRUPT_COMPARE_MATCH_A, Tone_Timer3_Interrupt);
+#endif
         break;
       case 4:
         // 16 bit timer
@@ -162,6 +335,9 @@ void Tone::begin(uint8_t tonePin)
         bitWrite(TCCR4B, CS40, 1);
         timer4_pin_port = portOutputRegister(digitalPinToPort(_pin));
         timer4_pin_mask = digitalPinToBitMask(_pin);
+#ifdef WIRING
+        Timer4.attachInterrupt(INTERRUPT_COMPARE_MATCH_A, Tone_Timer4_Interrupt);
+#endif
         break;
       case 5:
         // 16 bit timer
@@ -171,6 +347,9 @@ void Tone::begin(uint8_t tonePin)
         bitWrite(TCCR5B, CS50, 1);
         timer5_pin_port = portOutputRegister(digitalPinToPort(_pin));
         timer5_pin_mask = digitalPinToBitMask(_pin);
+#ifdef WIRING
+        Timer5.attachInterrupt(INTERRUPT_COMPARE_MATCH_A, Tone_Timer5_Interrupt);
+#endif
         break;
 #endif
     }
@@ -398,118 +577,3 @@ bool Tone::isPlaying(void)
 }
 
 
-#if !defined(__AVR_ATmega8__)
-ISR(TIMER0_COMPA_vect)
-{
-  if (timer0_toggle_count != 0)
-  {
-    // toggle the pin
-    *timer0_pin_port ^= timer0_pin_mask;
-
-    if (timer0_toggle_count > 0)
-      timer0_toggle_count--;
-  }
-  else
-  {
-    TIMSK0 &= ~(1 << OCIE0A);                 // disable the interrupt
-    *timer0_pin_port &= ~(timer0_pin_mask);   // keep pin low after stop
-  }
-}
-#endif
-
-
-ISR(TIMER1_COMPA_vect)
-{
-  if (timer1_toggle_count != 0)
-  {
-    // toggle the pin
-    *timer1_pin_port ^= timer1_pin_mask;
-
-    if (timer1_toggle_count > 0)
-      timer1_toggle_count--;
-  }
-  else
-  {
-    TIMSK1 &= ~(1 << OCIE1A);                 // disable the interrupt
-    *timer1_pin_port &= ~(timer1_pin_mask);   // keep pin low after stop
-  }
-}
-
-
-ISR(TIMER2_COMPA_vect)
-{
-  int32_t temp_toggle_count = timer2_toggle_count;
-
-  if (temp_toggle_count != 0)
-  {
-    // toggle the pin
-    *timer2_pin_port ^= timer2_pin_mask;
-
-    if (temp_toggle_count > 0)
-      temp_toggle_count--;
-  }
-  else
-  {
-    TIMSK2 &= ~(1 << OCIE2A);                 // disable the interrupt
-    *timer2_pin_port &= ~(timer2_pin_mask);   // keep pin low after stop
-  }
-  
-  timer2_toggle_count = temp_toggle_count;
-}
-
-
-
-#if defined(__AVR_ATmega1280__)
-
-ISR(TIMER3_COMPA_vect)
-{
-  if (timer3_toggle_count != 0)
-  {
-    // toggle the pin
-    *timer3_pin_port ^= timer3_pin_mask;
-
-    if (timer3_toggle_count > 0)
-      timer3_toggle_count--;
-  }
-  else
-  {
-    TIMSK3 &= ~(1 << OCIE3A);                 // disable the interrupt
-    *timer3_pin_port &= ~(timer3_pin_mask);   // keep pin low after stop
-  }
-}
-
-ISR(TIMER4_COMPA_vect)
-{
-  if (timer4_toggle_count != 0)
-  {
-    // toggle the pin
-    *timer4_pin_port ^= timer4_pin_mask;
-
-    if (timer4_toggle_count > 0)
-      timer4_toggle_count--;
-  }
-  else
-  {
-    TIMSK4 &= ~(1 << OCIE4A);                 // disable the interrupt
-    *timer4_pin_port &= ~(timer4_pin_mask);   // keep pin low after stop
-  }
-}
-
-ISR(TIMER5_COMPA_vect)
-{
-  if (timer5_toggle_count != 0)
-  {
-    // toggle the pin
-    *timer5_pin_port ^= timer5_pin_mask;
-
-    if (timer5_toggle_count > 0)
-      timer5_toggle_count--;
-  }
-  else
-  {
-    TIMSK5 &= ~(1 << OCIE5A);                 // disable the interrupt
-    *timer5_pin_port &= ~(timer5_pin_mask);   // keep pin low after stop
-  }
-}
-
-#endif
