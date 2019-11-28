@@ -153,7 +153,7 @@ This repository includes the following third-party libraries, found in the "libs
 
 | Library           | Version    | License  | URL                                              |
 | ----------------- | ---------- | -------- | ------------------------------------------------ |
-| Adafruit_NeoPixel | 1.2.3      | LGPLv3   | (https://github.com/adafruit/Adafruit_NeoPixel)  |
+| Adafruit_NeoPixel | 1.3.3      | LGPLv3   | (https://github.com/adafruit/Adafruit_NeoPixel)  |
 | ClickButton       | 2013.08.29 | GPLv3    | (https://code.google.com/archive/p/clickbutton/) |
 | OneWire           | 2.3.2      | BSD-like | (https://github.com/PaulStoffregen/OneWire)      |
 | Time              | 1.5        | LGPLv2.1 | (http://playground.arduino.cc/code/time)         |
