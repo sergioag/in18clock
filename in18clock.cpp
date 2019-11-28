@@ -43,6 +43,9 @@
 #include "time.h"
 #include "tone.h"
 
+// This is the version number. First two digits are always "99" to differentiate from official firmware.
+#define VERSION "990100"
+
 menu_struct menu[] = {
 	/* Parent,	First Child,	Last Child,	Value,		Min,		Max,		EEPROM Offset,	Blink,			Display,	Edit,		Inc.			Dec.			Save 		On Show */
 /* Display time */
@@ -133,7 +136,7 @@ void loop() {
 
 void doTest()
 {
-	String testStringArray[11]={"000000","111111","222222","333333","444444","555555","666666","777777","888888","999999",""};
+	String testStringArray[11]={"000000","111111","222222","333333","444444","555555","666666","777777","888888","999999",VERSION};
 	int dlay=500;
 	bool test=1;
 	byte strIndex=-1;
