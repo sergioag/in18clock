@@ -144,8 +144,7 @@ However, there are some exceptions:
 
 Known Issues
 ============
-No major issues are known. However, these minor issues exist:
-- When clock is off due to turn off time, IR control doesn't work. Cause is unknown. Nothing obvious.
+No issues are currently known.
 
 Third-Party Libraries
 =====================
