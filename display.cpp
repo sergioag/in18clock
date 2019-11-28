@@ -42,7 +42,7 @@
 unsigned int SymbolArray[10]={1, 2, 4, 8, 16, 32, 64, 128, 256, 512};
 
 // Indicates if all the indicators should be powered on (subject to their own values)
-boolean powerOn = true;
+volatile boolean powerOn = true;
 
 // Current displayed value in the tubes
 String stringToDisplay = "000000";
@@ -61,7 +61,7 @@ void displaySetup()
 	SPI.setDataMode (SPI_MODE2); // Mode 3 SPI
 	SPI.setClockDivider(SPI_CLOCK_DIV8); // SCK = 16MHz/128= 125kHz
 
-	//timer3 setup for calling doIndication function
+	//timer4 setup for calling doIndication function
 	TCCR4A = 0;             //control registers reset (WGM21, WGM20)
 	TCCR4B = 0;             //control registers reset.
 	TCCR4B = (1 << CS12)|(1 << CS10)|(1 << WGM12); //prescaler 1024 and CTC mode
@@ -69,8 +69,8 @@ void displaySetup()
 	TCNT4=0; //reset counter to 0
 	OCR4A = 46; //3mS
 	//OCR4A = 92; //6mS
-	TIMSK4 = (1 << OCIE1A);//TIMER3_COMPA_vect interrupt enable
-	sei();
+	TIMSK4 = (1 << OCIE1A);//TIMER4_COMPA_vect interrupt enable
+	interrupts();
 
 	displayPowerOn();
 
@@ -224,6 +224,6 @@ void displayUpdate()
 ISR(TIMER4_COMPA_vect)
 {
 	// We must enable interrupts as early as possible. Otherwise, the beeper will suffer
-	sei();
+	interrupts();
 	displayUpdate();
 }
