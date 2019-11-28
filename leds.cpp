@@ -65,11 +65,7 @@ void ledsSetup()
 
 void ledsOff()
 {
-	for(int i=0;i<NUMPIXELS;i++)
-	{
-		pixels.setPixelColor(i, pixels.Color(0, 0, 0));
-	}
-	pixels.show();
+	ledsSet(0,0,0);
 }
 
 void ledsTest()
