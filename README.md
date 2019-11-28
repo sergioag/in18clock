@@ -158,4 +158,4 @@ This repository includes the following third-party libraries, found in the "libs
 | OneWire           | 2.3.2      | BSD-like | (https://github.com/PaulStoffregen/OneWire)      |
 | Time              | 1.5        | LGPLv2.1 | (http://playground.arduino.cc/code/time)         |
 | Tone              | 0006       | GPLv3    | (https://github.com/bhagman/Tone)                |
-| IRremote          | 2.0.1      | LGPLv2.1 | (https://github.com/shirriff/Arduino-IRremote)   |
+| IRremote          | 2.1.0      | LGPLv2.1 | (https://github.com/shirriff/Arduino-IRremote)   |
