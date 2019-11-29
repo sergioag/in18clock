@@ -1,3 +1,6 @@
+# WARNING
+## This branch contains an experimental version of the firmware. However, it needs a hardware change or your tubes will be rapidly burned out. DO NOT USE THIS VERSION!!! If you want to use a stable version, please check the master branch instead.
+
 This repository contains the source code to an alternative firmware for [GRA & AFCH's NCS318 Nixie clock](http://gra-afch.com/catalog/nixie-tubes-clocks/nixie-tubes-clock-in-acrylic-case-arduino-shield-ncs318-in-18-options-columns-tubes-arduino-gps-temp-sensor-remote-tubes-optional/).
 Please note that this clock comes with either the Arduino Uno or Arduino Mega depending on the selected options. For this alternate firmware, only Arduino Mega is supported. Support for Arduino Uno may be added at some point, but isn't currently planned.
 
