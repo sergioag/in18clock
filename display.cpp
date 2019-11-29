@@ -32,6 +32,7 @@
 #include <SPI.h>
 #include "display.h"
 #include "pins.h"
+#include "debug.h"
 
 #define UpperDotsMask 0x80000000
 #define LowerDotsMask 0x40000000
@@ -52,6 +53,8 @@ unsigned int blinkMask = 0;
 
 // Flags that control if the upper/lower dots are turned on
 boolean upperDots = false, lowerDots = false;
+
+boolean isDirty = true;
 
 void displaySetup()
 {
@@ -78,12 +81,18 @@ void displaySetup()
 
 void displayPowerOn()
 {
-	powerOn = true;
+	if(!powerOn) {
+		powerOn = true;
+		isDirty = true;
+	}
 }
 
 void displayPowerOff()
 {
-	powerOn = false;
+	if(powerOn) {
+		powerOn = false;
+		isDirty = true;
+	}
 }
 
 boolean displayIsPoweredOn()
@@ -93,12 +102,19 @@ boolean displayIsPoweredOn()
 
 void displaySetUpperDots(boolean status)
 {
-	upperDots = status;
+	if(upperDots != status) {
+		upperDots = status;
+		isDirty = true;
+	}
+
 }
 
 void displaySetLowerDots(boolean status)
 {
-	lowerDots = status;
+	if(lowerDots != status) {
+		lowerDots = status;
+		isDirty = true;
+	}
 }
 
 void displaySetBlinkMask(byte newBlinkMask)
@@ -108,7 +124,11 @@ void displaySetBlinkMask(byte newBlinkMask)
 
 void displaySetValue(String value)
 {
-	stringToDisplay = value;
+	if(!stringToDisplay.equals(value)) {
+		stringToDisplay = value;
+		debugOutput("New string is: " + value);
+		isDirty = true;
+	}
 }
 
 word doEditBlink(unsigned int pos)
@@ -150,75 +170,93 @@ void displayUpdate()
 {
 	unsigned long Var32;
 
-	// Turning off the OE pin for the tube drivers first, so nothing else is done if display is turned off
-	bitClear(PORTB, PB4);
+	if(isDirty) {
+		isDirty = false;
 
-	if(!powerOn) {
-		return;
+		// Turning off the OE pin for the tube drivers first, so nothing else is done if display is turned off
+		bitClear(PORTB, PB4);
+
+		if(!powerOn) {
+			return;
+		}
+
+		unsigned long digits = stringToDisplay.toInt();
+		Var32 = 0;
+
+		Var32 |= (unsigned long) (SymbolArray[digits % 10]/* & doEditBlink(5) & moveMask()*/) << 20; // s2
+		digits /= 10;
+
+		Var32 |= (unsigned long) (SymbolArray[digits % 10]/* & doEditBlink(4) & moveMask()*/) << 10; //s1
+		digits /= 10;
+
+		Var32 |= (unsigned long) (SymbolArray[digits % 10]/* & doEditBlink(3) & moveMask()*/); //m2
+		digits /= 10;
+
+		if (lowerDots) {
+			Var32 |= LowerDotsMask;
+		} else {
+			Var32 &= ~LowerDotsMask;
+		}
+		if (upperDots) {
+			Var32 |= UpperDotsMask;
+		} else {
+			Var32 &= ~UpperDotsMask;
+		}
+
+		SPI.transfer(Var32 >> 24);
+		SPI.transfer(Var32 >> 16);
+		SPI.transfer(Var32 >> 8);
+		SPI.transfer(Var32);
+
+		Var32 = 0;
+
+		Var32 |= (unsigned long) (SymbolArray[digits % 10] /*& doEditBlink(2) & moveMask()*/) << 20; // m1
+		digits /= 10;
+
+		Var32 |= (unsigned long) (SymbolArray[digits % 10] /*& doEditBlink(1) & moveMask()*/) << 10; //h2
+		digits /= 10;
+
+		Var32 |= (unsigned long) SymbolArray[digits % 10] /*& doEditBlink(0) & moveMask()*/; //h1
+		digits /= 10;
+
+		if (lowerDots) {
+			Var32 |= LowerDotsMask;
+		} else {
+			Var32 &= ~LowerDotsMask;
+		}
+
+		if (upperDots) {
+			Var32 |= UpperDotsMask;
+		} else {
+			Var32 &= ~UpperDotsMask;
+		}
+
+		SPI.transfer(Var32 >> 24);
+		SPI.transfer(Var32 >> 16);
+		SPI.transfer(Var32 >> 8);
+		SPI.transfer(Var32);
+		SPI.endTransaction();
+
+/*		// NTC64-57
+		SPI.transfer(0);
+		// NTC56-49
+		SPI.transfer(32);
+		// NTC48-41
+		SPI.transfer(8);
+		// NTC40-33
+		SPI.transfer(32);
+
+		// NTC32-25
+		SPI.transfer(2);
+		// NTC24-17
+		SPI.transfer(0);
+		// NTC16-9
+		SPI.transfer(0);
+		// NTC8-1
+		SPI.transfer(0);
+		SPI.endTransaction();*/
+		bitSet(PORTB, PB4);
 	}
-
-	unsigned long digits=stringToDisplay.toInt();
-	Var32 = 0;
-
-	Var32|=(unsigned long)(SymbolArray[digits%10]&doEditBlink(5)&moveMask())<<20; // s2
-	digits/=10;
-
-	Var32|=(unsigned long)(SymbolArray[digits%10]&doEditBlink(4)&moveMask())<<10; //s1
-	digits/=10;
-
-	Var32|=(unsigned long) (SymbolArray[digits%10]&doEditBlink(3)&moveMask()); //m2
-	digits/=10;
-
-	if (lowerDots) {
-		Var32|=LowerDotsMask;
-	}
-	else {
-		Var32&=~LowerDotsMask;
-	}
-	if (upperDots) {
-		Var32|=UpperDotsMask;
-	}
-	else {
-		Var32&=~UpperDotsMask;
-	}
-
-	SPI.transfer(Var32>>24);
-	SPI.transfer(Var32>>16);
-	SPI.transfer(Var32>>8);
-	SPI.transfer(Var32);
-
-	Var32=0;
-
-	Var32|=(unsigned long)(SymbolArray[digits%10]&doEditBlink(2)&moveMask())<<20; // m1
-	digits/=10;
-
-	Var32|= (unsigned long)(SymbolArray[digits%10]&doEditBlink(1)&moveMask())<<10; //h2
-	digits/=10;
-
-	Var32|= (unsigned long)SymbolArray[digits%10]&doEditBlink(0)&moveMask(); //h1
-	digits/=10;
-
-	if (lowerDots) {
-		Var32|=LowerDotsMask;
-	}
-	else  {
-		Var32&=~LowerDotsMask;
-	}
-
-	if (upperDots) {
-		Var32|=UpperDotsMask;
-	}
-	else {
-		Var32&=~UpperDotsMask;
-	}
-
-	SPI.transfer(Var32>>24);
-	SPI.transfer(Var32>>16);
-	SPI.transfer(Var32>>8);
-	SPI.transfer(Var32);
-
-	bitSet(PORTB, PB4);
-
 }
 
 ISR(TIMER4_COMPA_vect)
