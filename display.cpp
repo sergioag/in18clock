@@ -55,6 +55,7 @@ unsigned int blinkMask = 0;
 boolean upperDots = false, lowerDots = false;
 
 boolean isDirty = true;
+unsigned long lastTimeEditBlink;
 
 void displaySetup()
 {
@@ -63,6 +64,8 @@ void displaySetup()
 	SPI.begin();
 	SPI.setDataMode (SPI_MODE2); // Mode 3 SPI
 	SPI.setClockDivider(SPI_CLOCK_DIV8); // SCK = 16MHz/128= 125kHz
+
+	lastTimeEditBlink = millis();
 
 	//timer4 setup for calling doIndication function
 	TCCR4A = 0;             //control registers reset (WGM21, WGM20)
@@ -126,9 +129,13 @@ void displaySetValue(String value)
 {
 	if(!stringToDisplay.equals(value)) {
 		stringToDisplay = value;
-		debugOutput("New string is: " + value);
 		isDirty = true;
 	}
+}
+
+boolean shouldBlink()
+{
+	return ((millis()-lastTimeEditBlink)>300 && blinkMask != 0);
 }
 
 word doEditBlink(unsigned int pos)
@@ -136,10 +143,9 @@ word doEditBlink(unsigned int pos)
 	unsigned int lowBit=blinkMask>>pos;
 	lowBit=lowBit&B00000001;
 
-	static unsigned long lastTimeEditBlink=millis();
 	static bool blinkState=false;
 	word mask=TubeON;
-	if ((millis()-lastTimeEditBlink)>300)
+	if (shouldBlink())
 	{
 		lastTimeEditBlink=millis();
 		blinkState=!blinkState;
@@ -149,28 +155,11 @@ word doEditBlink(unsigned int pos)
 	return mask;
 }
 
-word moveMask()
-{
-	static int callCounter=0;
-	static int tubeCounter=0;
-	word onOffTubeMask;
-	if (callCounter == tubeCounter) onOffTubeMask=TubeON;
-	else onOffTubeMask=TubeOFF;
-	callCounter++;
-	if (callCounter == 6)
-	{
-		callCounter=0;
-		tubeCounter++;
-		if (tubeCounter == 6) tubeCounter = 0;
-	}
-	return onOffTubeMask;
-}
-
 void displayUpdate()
 {
 	unsigned long Var32;
 
-	if(isDirty) {
+	if(isDirty || shouldBlink()) {
 		isDirty = false;
 
 		// Turning off the OE pin for the tube drivers first, so nothing else is done if display is turned off
@@ -183,13 +172,13 @@ void displayUpdate()
 		unsigned long digits = stringToDisplay.toInt();
 		Var32 = 0;
 
-		Var32 |= (unsigned long) (SymbolArray[digits % 10]/* & doEditBlink(5) & moveMask()*/) << 20; // s2
+		Var32 |= (unsigned long) (SymbolArray[digits % 10] & doEditBlink(5)) << 20; // s2
 		digits /= 10;
 
-		Var32 |= (unsigned long) (SymbolArray[digits % 10]/* & doEditBlink(4) & moveMask()*/) << 10; //s1
+		Var32 |= (unsigned long) (SymbolArray[digits % 10] & doEditBlink(4)) << 10; //s1
 		digits /= 10;
 
-		Var32 |= (unsigned long) (SymbolArray[digits % 10]/* & doEditBlink(3) & moveMask()*/); //m2
+		Var32 |= (unsigned long) (SymbolArray[digits % 10] & doEditBlink(3)); //m2
 		digits /= 10;
 
 		if (lowerDots) {
@@ -210,13 +199,13 @@ void displayUpdate()
 
 		Var32 = 0;
 
-		Var32 |= (unsigned long) (SymbolArray[digits % 10] /*& doEditBlink(2) & moveMask()*/) << 20; // m1
+		Var32 |= (unsigned long) (SymbolArray[digits % 10] & doEditBlink(2)) << 20; // m1
 		digits /= 10;
 
-		Var32 |= (unsigned long) (SymbolArray[digits % 10] /*& doEditBlink(1) & moveMask()*/) << 10; //h2
+		Var32 |= (unsigned long) (SymbolArray[digits % 10] & doEditBlink(1)) << 10; //h2
 		digits /= 10;
 
-		Var32 |= (unsigned long) SymbolArray[digits % 10] /*& doEditBlink(0) & moveMask()*/; //h1
+		Var32 |= (unsigned long) SymbolArray[digits % 10] & doEditBlink(0); //h1
 		digits /= 10;
 
 		if (lowerDots) {
@@ -237,24 +226,6 @@ void displayUpdate()
 		SPI.transfer(Var32);
 		SPI.endTransaction();
 
-/*		// NTC64-57
-		SPI.transfer(0);
-		// NTC56-49
-		SPI.transfer(32);
-		// NTC48-41
-		SPI.transfer(8);
-		// NTC40-33
-		SPI.transfer(32);
-
-		// NTC32-25
-		SPI.transfer(2);
-		// NTC24-17
-		SPI.transfer(0);
-		// NTC16-9
-		SPI.transfer(0);
-		// NTC8-1
-		SPI.transfer(0);
-		SPI.endTransaction();*/
 		bitSet(PORTB, PB4);
 	}
 }
