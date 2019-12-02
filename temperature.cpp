@@ -36,20 +36,41 @@
 #include "utils.h"
 #include "User_Setup.h"
 
+float temperature;
+long temperatureLastUpdate;
+boolean isTemperaturePresent = false;
+
+/**
+ * Reading from the Dallas OneWire temperature sensor requires turning off interrupts due to the precise timing
+ * requirements needed by the library. Unfortunately, this causes issues with the Tone library, making the beeper
+ * sound distorted because it depends on a timer interrupt to generate the pulses at the adequate rate.
+ *
+ * The solution is to limit the refresh rate of the temperature display. It is now updated every 250ms. It seems to be
+ * more than enough to keep Tone happy.
+ */
+void tempUpdate()
+{
+	if(millis() - temperatureLastUpdate >= TEMP_UPDATE_INTERVAL) {
+		temperatureLastUpdate = millis();
+
+		isTemperaturePresent = ds18b20IsPresent();
+		if (isTemperaturePresent) {
+			float celsius = ds18b20ReadTemperature();
+			if (menuGetValue(MENU_EDIT_TEMP_UNIT) == TEMP_FAHRENHEIT) {
+				temperature = (celsius * 1.8 + 32.0) * 100;
+			} else {
+				temperature = celsius * 100;
+			}
+		}
+	}
+}
 void tempDisplay()
 {
 	String temp = "000000";
 
-	if(ds18b20IsPresent()) {
-		float celsius = ds18b20ReadTemperature();
-		float temperature;
-		if(menuGetValue(MENU_EDIT_TEMP_UNIT) == TEMP_FAHRENHEIT) {
-			temperature = (celsius * 1.8 + 32.0) * 100;
-		}
-		else {
-			temperature = celsius * 100;
-		}
+	tempUpdate();
 
+	if(isTemperaturePresent) {
 		int iTemperature = round(temperature);
 		if (abs(iTemperature) < 10) temp = "00000" + String(abs(iTemperature));
 		if (abs(iTemperature) < 100) temp = "0000" + String(abs(iTemperature));
@@ -74,4 +95,12 @@ void tempEditDisplay()
 void tempSave()
 {
 	menuSave(MENU_EDIT_TEMP_UNIT);
+}
+
+void tempOnShow(boolean isShowing)
+{
+	if(isShowing) {
+		// Force update
+		temperatureLastUpdate = 0;
+	}
 }
