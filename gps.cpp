@@ -28,44 +28,68 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#ifndef IN18CLOCK_MENU_H
-#define IN18CLOCK_MENU_H
 
-#define NO_PARENT	-1
-#define	NO_CHILD	-1
-#define NO_LOAD		-1
-#define NO_MENU		-1
+#include <Arduino.h>
+#include "gps.h"
 
-typedef struct menu_struct
+#define GPS_BUFFER_LENGTH 83
+char GPS_Package[GPS_BUFFER_LENGTH];
+byte GPS_position=0;
+
+struct GPS_DATE_TIME
 {
-	int	id;
-	int 	parent;
-	int 	firstChild;
-	int 	lastChild;
-	int 	value;
-	int 	minValue;
-	int 	maxValue;
-	int 	eepromOffset;
-	int 	blinkPattern;
-	void	(*displayHandler)();
-	boolean (*onEditHandler)();
-	void	(*onIncrementHandler)();
-	void	(*onDecrementHandler)();
-	void	(*onSaveHandler)();
-	void	(*onShowHandler)(boolean isShowing);
+	byte GPS_hours;
+	byte GPS_minutes;
+	byte GPS_seconds;
+	byte GPS_day;
+	byte GPS_month;
+	int GPS_year;
+	bool GPS_Valid_Data=false;
+	unsigned long GPS_Data_Parsed_time;
 };
 
-void menuSetup(menu_struct *new_menu, int numElements);
-int menuGetCurrentPosition();
-void menuSetPosition(int newId);
-void menuUpdate();
-void menuSetValue(int id, int value);
-int menuGetValue(int id);
-void menuSetBlinkPattern(int id, int blinkPattern);
-int menuSave(int id);
+GPS_DATE_TIME GPS_Date_Time;
 
-int menuModeButtonState();
-int menuUpButtonState();
-int menuDownButtonState();
-int menuGetIndexById(int id);
-#endif //IN18CLOCK_MENU_H
+void gpsSetup()
+{
+	Serial1.begin(9600);
+}
+
+uint8_t gpsVerifyChecksum()
+{
+	uint8_t  CheckSum = 0, MessageCheckSum = 0;   // check sum
+	uint16_t i = 1;                // 1 sybol left from '$'
+
+	while (GPS_Package[i]!='*')
+	{
+		CheckSum^=GPS_Package[i];
+		if (++i == GPS_BUFFER_LENGTH) {Serial.println(F("End of the line")); return 0;} // end of line not found
+	}
+
+	if (GPS_Package[++i]>0x40) MessageCheckSum=(GPS_Package[i]-0x37)<<4;  // ASCII codes to DEC convertation
+	else                  MessageCheckSum=(GPS_Package[i]-0x30)<<4;
+	if (GPS_Package[++i]>0x40) MessageCheckSum+=(GPS_Package[i]-0x37);
+	else                  MessageCheckSum+=(GPS_Package[i]-0x30);
+
+	if (MessageCheckSum != CheckSum) {Serial.println("wrong checksum"); return 0;} // wrong checksum
+	//Serial.println("Checksum is ok");
+	return 1; // all ok!
+}
+
+void gpsUpdate()
+{
+	if(Serial1.available()) {
+		byte readByte = Serial1.read();
+		GPS_Package[GPS_position++] = readByte;
+		if(GPS_position == GPS_BUFFER_LENGTH) {
+			GPS_position = 0;
+		}
+		else if(readByte == 0x0a) {
+			GPS_Package[GPS_position] = 0;
+			GPS_position = 0;
+			if(gpsVerifyChecksum()) {
+				//gpsSetTime();
+			}
+		}
+	}
+}

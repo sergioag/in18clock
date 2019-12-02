@@ -28,44 +28,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#ifndef IN18CLOCK_MENU_H
-#define IN18CLOCK_MENU_H
 
-#define NO_PARENT	-1
-#define	NO_CHILD	-1
-#define NO_LOAD		-1
-#define NO_MENU		-1
+#ifndef IN18CLOCK_GPS_H
+#define IN18CLOCK_GPS_H
 
-typedef struct menu_struct
-{
-	int	id;
-	int 	parent;
-	int 	firstChild;
-	int 	lastChild;
-	int 	value;
-	int 	minValue;
-	int 	maxValue;
-	int 	eepromOffset;
-	int 	blinkPattern;
-	void	(*displayHandler)();
-	boolean (*onEditHandler)();
-	void	(*onIncrementHandler)();
-	void	(*onDecrementHandler)();
-	void	(*onSaveHandler)();
-	void	(*onShowHandler)(boolean isShowing);
-};
+void gpsSetup();
+void gpsUpdate();
 
-void menuSetup(menu_struct *new_menu, int numElements);
-int menuGetCurrentPosition();
-void menuSetPosition(int newId);
-void menuUpdate();
-void menuSetValue(int id, int value);
-int menuGetValue(int id);
-void menuSetBlinkPattern(int id, int blinkPattern);
-int menuSave(int id);
-
-int menuModeButtonState();
-int menuUpButtonState();
-int menuDownButtonState();
-int menuGetIndexById(int id);
-#endif //IN18CLOCK_MENU_H
+#endif //IN18CLOCK_GPS_H

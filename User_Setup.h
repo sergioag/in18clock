@@ -33,6 +33,12 @@
 
 void doTest();
 
+#define MENU_TIME		0
+#define MENU_DATE		1
+#define MENU_TEMPERATURE	2
+#define MENU_ALARM		3
+#define MENU_LED_CONFIG		4
+#define MENU_ONOFF_CONFIG	5
 #define MENU_EDIT_TIME_FORMAT	6
 #define MENU_EDIT_HOURS		7
 #define MENU_EDIT_MINUTES	8
