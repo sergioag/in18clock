@@ -53,7 +53,7 @@ menu_struct menu[] = {
 /* Display date */
 /*  1 */ {MENU_DATE,			NO_PARENT,		MENU_EDIT_DATE_FORMAT,	MENU_EDIT_YEAR,		0,	0,	0,	NO_LOAD,	0,		dateDisplay,	dateEdit,	0,	0,	dateOnSave,	0},
 /* Display temperature */
-/*  2 */ {MENU_TEMPERATURE,		NO_PARENT,		MENU_EDIT_TEMP_UNIT,	MENU_EDIT_TEMP_UNIT,	0,	0,	0,	NO_LOAD,	0,		tempDisplay,	0,	0,	0,	tempSave,	0},
+/*  2 */ {MENU_TEMPERATURE,		NO_PARENT,		MENU_EDIT_TEMP_UNIT,	MENU_EDIT_TEMP_UNIT,	0,	0,	0,	NO_LOAD,	0,		tempDisplay,	0,	0,	0,	tempSave,	tempOnShow},
 /* Display alarm */
 /*  3 */ {MENU_ALARM,			NO_PARENT,		MENU_EDIT_AL_HOURS,	MENU_EDIT_AL_SONG,	0,	0,	0,	NO_LOAD,	0,		alarmDisplay,	0,	0,	0,	alarmOnSave,	0},
 /* LED configuration */

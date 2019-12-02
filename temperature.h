@@ -34,8 +34,11 @@
 #define TEMP_CELSIUS	0
 #define TEMP_FAHRENHEIT	1
 
+#define TEMP_UPDATE_INTERVAL	250
+
 void tempDisplay();
 void tempEditDisplay();
 void tempSave();
+void tempOnShow(boolean isShowing);
 
 #endif //IN18CLOCK_TEMPERATURE_H
