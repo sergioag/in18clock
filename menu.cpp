@@ -269,7 +269,7 @@ int menuSave(int id)
 {
 	int index = menuGetIndexById(id);
 	if(menu[index].eepromOffset != NO_LOAD) {
-		EEPROM.write(menu[index].eepromOffset, menu[index].value);
+		EEPROM.update(menu[index].eepromOffset, menu[index].value);
 	}
 }
 
