@@ -34,9 +34,11 @@
 #define NO_PARENT	-1
 #define	NO_CHILD	-1
 #define NO_LOAD		-1
+#define NO_MENU		-1
 
 typedef struct menu_struct
 {
+	int	id;
 	int 	parent;
 	int 	firstChild;
 	int 	lastChild;
@@ -55,15 +57,15 @@ typedef struct menu_struct
 
 void menuSetup(menu_struct *new_menu, int numElements);
 int menuGetCurrentPosition();
-void menuSetPosition(int newPosition);
+void menuSetPosition(int newId);
 void menuUpdate();
-void menuSetValue(int index, int value);
-int menuGetValue(int index);
-void menuSetBlinkPattern(int index, int blinkPattern);
-int menuSave(int index);
+void menuSetValue(int id, int value);
+int menuGetValue(int id);
+void menuSetBlinkPattern(int id, int blinkPattern);
+int menuSave(int id);
 
 int menuModeButtonState();
 int menuUpButtonState();
 int menuDownButtonState();
-
+int menuGetIndexById(int id);
 #endif //IN18CLOCK_MENU_H

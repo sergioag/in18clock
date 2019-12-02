@@ -32,6 +32,7 @@
 #include <ClickButton.h>
 #include <EEPROM.h>
 #include "alarm.h"
+#include "debug.h"
 #include "display.h"
 #include "ir.h"
 #include "menu.h"
@@ -55,8 +56,10 @@ unsigned long timeLastInput = 0;
 static menu_struct *menu;
 
 
-void menuSetPosition(int newPosition)
+void menuSetPosition(int newId)
 {
+	int newPosition = menuGetIndexById(newId);
+
 	if(menu[menuPosition].onShowHandler) {
 		menu[menuPosition].onShowHandler(false);
 	}
@@ -143,18 +146,18 @@ void menuNext()
 			menuSetPosition(0);
 		}
 		else {
-			menuSetPosition(newMenuPosition);
+			menuSetPosition(menu[newMenuPosition].id);
 		}
 	}
 	else {
 		/*
 		 * If we reach the lastChild or reach the end of menu (shouldn't happen), then we return to parent.
 		 */
-		if(newMenuPosition == numMenuElements || newMenuPosition > menu[menu[menuPosition].parent].lastChild) {
+		if(newMenuPosition == numMenuElements || newMenuPosition > menuGetIndexById(menu[menuGetIndexById(menu[menuPosition].parent)].lastChild)) {
 			menuBack();
 		}
 		else {
-			menuSetPosition(newMenuPosition);
+			menuSetPosition(menu[newMenuPosition].id);
 		}
 	}
 }
@@ -244,26 +247,27 @@ void menuUpdate()
 
 int menuGetCurrentPosition()
 {
-	return menuPosition;
+	return menu[menuPosition].id;
 }
 
-void menuSetValue(int index, int value)
+void menuSetValue(int id, int value)
 {
-	menu[index].value = value;
+	menu[menuGetIndexById(id)].value = value;
 }
 
-int menuGetValue(int index)
+int menuGetValue(int id)
 {
-	return menu[index].value;
+	return menu[menuGetIndexById(id)].value;
 }
 
-void menuSetBlinkPattern(int index, int blinkPattern)
+void menuSetBlinkPattern(int id, int blinkPattern)
 {
-	menu[index].blinkPattern = blinkPattern;
+	menu[menuGetIndexById(id)].blinkPattern = blinkPattern;
 }
 
-int menuSave(int index)
+int menuSave(int id)
 {
+	int index = menuGetIndexById(id);
 	if(menu[index].eepromOffset != NO_LOAD) {
 		EEPROM.write(menu[index].eepromOffset, menu[index].value);
 	}
@@ -297,4 +301,17 @@ int menuDownButtonState()
 	else {
 		return irDownButton();
 	}
+}
+
+int menuGetIndexById(int id)
+{
+	for(int i = 0; i < numMenuElements; i++) {
+		if(menu[i].id == id) {
+			return i;
+		}
+	}
+
+	debugOutput("Returning root menu because menu was not found with ID ", id);
+
+	return 0;
 }
