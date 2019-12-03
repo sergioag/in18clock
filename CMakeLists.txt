@@ -60,7 +60,7 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs)
 
 #### Additional settings for programmer. From programmers.txt
 set(${PROJECT_NAME}_PROGRAMMER avrispmkii)
-set(${PROJECT_NAME}_PORT /dev/cu.usbserial-1410)
+set(${PROJECT_NAME}_PORT /dev/tty.usbmodem14101)
 # set(mega.upload.speed 9600)
 
 ## Verbose build process
