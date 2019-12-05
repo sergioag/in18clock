@@ -137,11 +137,11 @@ word moveMask()
 	if (callCounter == tubeCounter) onOffTubeMask=TubeON;
 	else onOffTubeMask=TubeOFF;
 	callCounter++;
-	if (callCounter == 6)
+	if (callCounter == 3	)
 	{
 		callCounter=0;
 		tubeCounter++;
-		if (tubeCounter == 6) tubeCounter = 0;
+		if (tubeCounter == 3) tubeCounter = 0;
 	}
 	return onOffTubeMask;
 }
