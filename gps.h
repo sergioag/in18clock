@@ -34,5 +34,6 @@
 
 void gpsSetup();
 void gpsUpdate();
+void gpsTimeUpdate();
 
 #endif //IN18CLOCK_GPS_H
