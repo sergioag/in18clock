@@ -34,10 +34,10 @@
 void displaySetup();
 void displayPowerOff();
 void displayPowerOn();
-void displaySetUpperDots(boolean status);
-void displaySetLowerDots(boolean status);
+void displaySetUpperDots(bool status);
+void displaySetLowerDots(bool status);
 void displaySetBlinkMask(byte newBlinkMask);
 void displaySetValue(String value);
-boolean displayIsPoweredOn();
+bool displayIsPoweredOn();
 
 #endif //IN18CLOCK_DISPLAY_H

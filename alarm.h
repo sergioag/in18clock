@@ -37,6 +37,6 @@ void alarmOnSave();
 void alarmSetup();
 void alarmUpdate();
 void alarmStop();
-boolean alarmIsSounding();
+bool alarmIsSounding();
 
 #endif //IN18CLOCK_ALARM_H

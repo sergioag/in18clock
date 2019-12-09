@@ -34,7 +34,7 @@
 
 OneWire ds(PIN_DS18B20);
 
-boolean isPresent = false;
+bool isPresent = false;
 
 byte addr[8];
 
@@ -45,7 +45,7 @@ void ds18b20Setup()
 	}
 }
 
-boolean ds18b20IsPresent()
+bool ds18b20IsPresent()
 {
 	return isPresent;
 }

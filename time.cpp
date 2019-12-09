@@ -38,7 +38,7 @@
 #include "utils.h"
 #include "User_Setup.h"
 
-boolean antiPoisoningInProgress = false;
+bool antiPoisoningInProgress = false;
 unsigned long lastDigitChange;
 String digitCycle[] = {
 	"000000", "111111", "222222", "333333", "444444", "555555", "666666", "777777", "888888", "999999", "000000"
@@ -68,7 +68,7 @@ void resetAntiPoisoning()
 	antiPoisoningInProgress = true;
 }
 
-void timeOnShow(boolean isShowing)
+void timeOnShow(bool isShowing)
 {
 	if(isShowing) {
 		timeWakeUpDisplay();
@@ -134,7 +134,7 @@ void timeEditDisplay()
 	}
 }
 
-boolean timeEdit() {
+bool timeEdit() {
 	menuSetValue(MENU_EDIT_HOURS, hour());
 	menuSetValue(MENU_EDIT_MINUTES, minute());
 	menuSetValue(MENU_EDIT_SECONDS, second());

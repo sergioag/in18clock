@@ -48,11 +48,11 @@ typedef struct menu_struct
 	int 	eepromOffset;
 	int 	blinkPattern;
 	void	(*displayHandler)();
-	boolean (*onEditHandler)();
+	bool	(*onEditHandler)();
 	void	(*onIncrementHandler)();
 	void	(*onDecrementHandler)();
 	void	(*onSaveHandler)();
-	void	(*onShowHandler)(boolean isShowing);
+	void	(*onShowHandler)(bool isShowing);
 };
 
 void menuSetup(menu_struct *new_menu, int numElements);

@@ -70,7 +70,7 @@ void onOffSave()
 	menuSave(MENU_EDIT_ONOFF_ENABLE);
 }
 
-boolean onOffShouldTurnOff()
+bool onOffShouldTurnOff()
 {
 	if(menuGetValue(MENU_EDIT_ONOFF_ENABLE)) {
 		int timeOff = (menuGetValue(MENU_EDIT_OFF_HOUR) * 100) + menuGetValue(MENU_EDIT_OFF_MINUTE);

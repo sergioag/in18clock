@@ -38,7 +38,7 @@
 
 float temperature;
 long temperatureLastUpdate;
-boolean isTemperaturePresent = false;
+bool isTemperaturePresent = false;
 
 /**
  * Reading from the Dallas OneWire temperature sensor requires turning off interrupts due to the precise timing
@@ -97,7 +97,7 @@ void tempSave()
 	menuSave(MENU_EDIT_TEMP_UNIT);
 }
 
-void tempOnShow(boolean isShowing)
+void tempOnShow(bool isShowing)
 {
 	if(isShowing) {
 		// Force update

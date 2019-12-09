@@ -34,6 +34,6 @@
 
 void onOffDisplay();
 void onOffSave();
-boolean onOffShouldTurnOff();
+bool onOffShouldTurnOff();
 
 #endif //IN18CLOCK_ONOFF_H

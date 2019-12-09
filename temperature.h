@@ -39,6 +39,6 @@
 void tempDisplay();
 void tempEditDisplay();
 void tempSave();
-void tempOnShow(boolean isShowing);
+void tempOnShow(bool isShowing);
 
 #endif //IN18CLOCK_TEMPERATURE_H

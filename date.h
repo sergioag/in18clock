@@ -36,7 +36,7 @@
 
 void dateDisplay();
 void dateEditDisplay();
-boolean dateEdit();
+bool dateEdit();
 void dateOnSave();
 
 #endif //IN18CLOCK_DATE_H

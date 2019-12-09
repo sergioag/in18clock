@@ -37,6 +37,6 @@ void toneKey();
 void tonePlay(char *song);
 void toneUpdate();
 void toneStop();
-boolean toneIsPlaying();
+bool toneIsPlaying();
 
 #endif //IN18CLOCK_TONE_H

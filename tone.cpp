@@ -223,7 +223,7 @@ void toneUpdate()
 
 }
 
-boolean toneIsPlaying()
+bool toneIsPlaying()
 {
 	return !(currentSong == NULL || *currentSong == 0);
 }

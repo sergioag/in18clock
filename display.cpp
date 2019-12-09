@@ -42,7 +42,7 @@
 unsigned int SymbolArray[10]={1, 2, 4, 8, 16, 32, 64, 128, 256, 512};
 
 // Indicates if all the indicators should be powered on (subject to their own values)
-volatile boolean powerOn = true;
+volatile bool powerOn = true;
 
 // Current displayed value in the tubes
 String stringToDisplay = "000000";
@@ -51,7 +51,7 @@ String stringToDisplay = "000000";
 unsigned int blinkMask = 0;
 
 // Flags that control if the upper/lower dots are turned on
-boolean upperDots = false, lowerDots = false;
+bool upperDots = false, lowerDots = false;
 
 void displaySetup()
 {
@@ -86,17 +86,17 @@ void displayPowerOff()
 	powerOn = false;
 }
 
-boolean displayIsPoweredOn()
+bool displayIsPoweredOn()
 {
 	return powerOn;
 }
 
-void displaySetUpperDots(boolean status)
+void displaySetUpperDots(bool status)
 {
 	upperDots = status;
 }
 
-void displaySetLowerDots(boolean status)
+void displaySetLowerDots(bool status)
 {
 	lowerDots = status;
 }

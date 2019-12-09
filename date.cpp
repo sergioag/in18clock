@@ -84,7 +84,7 @@ void dateEditDisplay()
 	}
 }
 
-boolean dateEdit()
+bool dateEdit()
 {
 	menuSetValue(MENU_EDIT_DAY, day());
 	menuSetValue(MENU_EDIT_MONTH, month());
@@ -92,7 +92,7 @@ boolean dateEdit()
 	return true;
 }
 
-boolean isValidDate()
+bool isValidDate()
 {
 	int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	if (menuGetValue(MENU_EDIT_YEAR) % 4 == 0) days[1] = 29;
