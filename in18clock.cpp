@@ -35,6 +35,7 @@
 #include "debug.h"
 #include "display.h"
 #include "ds18b20.h"
+#include "gps.h"
 #include "leds.h"
 #include "menu.h"
 #include "onoff.h"
@@ -116,6 +117,7 @@ void setup() {
 	ledsSetup();
 	rtcGetTime();
 	ds18b20Setup();
+	gpsSetup();
 	doTest();
 	menuSetup(menu, sizeof(menu)/sizeof(menu_struct));
 	alarmSetup();
@@ -124,9 +126,11 @@ void setup() {
 void loop() {
 
 	if(millis() % 10000 == 0) {
+		gpsTimeUpdate();
 		rtcGetTime();
 	}
 
+	gpsUpdate();
 	ledsUpdate();
 	alarmUpdate();
 	toneUpdate();
