@@ -28,9 +28,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+/*
+ * This file contains the code for displaying and configuring the date. In this
+ * code we assume the system clock contains the correct date. When the user changes
+ * the date, we call the RTC code to update it, which also updates the system clock.
+ */
 #include <Arduino.h>
 #include <Time.h>
-#include "debug.h"
 #include "display.h"
 #include "menu.h"
 #include "rtc.h"
@@ -38,6 +42,14 @@
 #include "utils.h"
 #include "User_Setup.h"
 
+/**
+ * Prepares a string containing the date as per the specified parameters according
+ * to the format set in the configuration.
+ * @param day 	The day of month (1-28/29/30/31 depending of month)
+ * @param month The month (1 for January to 12 for December)
+ * @param year 	The year (00 to 99, which means 2000 to 2099)
+ * @return The string with the date in the configured format
+ */
 String getDateString(int day, int month, int year)
 {
 	switch(menuGetValue(MENU_EDIT_DATE_FORMAT)) {
@@ -48,6 +60,11 @@ String getDateString(int day, int month, int year)
 	}
 }
 
+/**
+ * Displays the current date, taken from the system clock, to the display.
+ *
+ * This function is called when the date menu is selected, but not in edit mode.
+ */
 void dateDisplay()
 {
 	displaySetValue(getDateString(day(), month(), year() % 100));
@@ -55,6 +72,9 @@ void dateDisplay()
 	displaySetUpperDots(false);
 }
 
+/**
+ * Displays the information applicable to date edit menu.
+ */
 void dateEditDisplay()
 {
 	if(menuGetCurrentPosition() == MENU_EDIT_DATE_FORMAT) {
@@ -72,6 +92,11 @@ void dateEditDisplay()
 		}
 	}
 	else {
+		/*
+		 * Date edit uses a freezed date taken when entering the edit menu. This is done
+		 * because we need a stable context to avoid weird cases where the date is
+		 * updated by the RTC just before we update it.
+		 */
 		String date = getDateString(menuGetValue(MENU_EDIT_DAY),
 			      menuGetValue(MENU_EDIT_MONTH),
 			      menuGetValue(MENU_EDIT_YEAR));
@@ -79,11 +104,13 @@ void dateEditDisplay()
 		displaySetValue(date);
 		displaySetLowerDots(true);
 		displaySetUpperDots(false);
-
-		debugOutput(date);
 	}
 }
 
+/**
+ * Loads the current date so the edit display function will have a freezed date.
+ * @return	always returns true
+ */
 bool dateEdit()
 {
 	menuSetValue(MENU_EDIT_DAY, day());
@@ -92,6 +119,10 @@ bool dateEdit()
 	return true;
 }
 
+/**
+ * Checks if the maximum days in month are valid given the month/year combination.
+ * @return 	True if the date is valid. False if it isn't.
+ */
 bool isValidDate()
 {
 	int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -100,6 +131,10 @@ bool isValidDate()
 
 }
 
+/**
+ *  Saves the date entered by the user. This also includes updating the RTC, which also
+ *  updates the system clock.
+ */
 void dateOnSave()
 {
 	if(!isValidDate()) {

@@ -28,6 +28,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+/*
+ * This file contains all the high-level code for the alarm code. This means here is
+ * the logic for checking if we must sound the alarm, and the code for configuring the
+ * alarm, as specified in the menu code.
+ *
+ * Here is also the definition for the songs that the user can choose.
+ */
 
 #include <Arduino.h>
 #include <Time.h>
@@ -39,8 +46,16 @@
 #include "tone.h"
 #include "utils.h"
 
+/**
+ * Indicates if the alarm is currently sounding. It is set to true when it begins
+ * sounding and it gets to false when it stops by any means (time out, user action).
+ * It will never be set to true if the alarm is disabled.
+ */
 bool alarmSounding;
 
+/**
+ * These are the songs available to the user. See README.md for details of the songs.
+ */
 char *songs[] = {
 	"MissionImp:d=16,o=6,b=95:32d,32d#,32d,32d#,32d,32d#,32d,32d#,32d,32d,32d#,32e,32f,32f#,32g,g,8p,g,8p,a#,p,c7,p,g,8p,g,8p,f,p,f#,p,g,8p,g,8p,a#,p,c7,p,g,8p,g,8p,f,p,f#,p,a#,g,2d,32p,a#,g,2c#,32p,a#,g,2c,a#5,8c,2p,32p,a#5,g5,2f#,32p,a#5,g5,2f,32p,a#5,g5,2e,d#,8d",
 	"PinkPanther:d=4,o=5,b=160:8d#,8e,2p,8f#,8g,2p,8d#,8e,16p,8f#,8g,16p,8c6,8b,16p,8d#,8e,16p,8b,2a#,2p,16a,16g,16e,16d,2e",
@@ -51,6 +66,9 @@ char *songs[] = {
 	"WeWishYou:d=4,o=5,b=200:d,g,8g,8a,8g,8f#,e,e,e,a,8a,8b,8a,8g,f#,d,d,b,8b,8c6,8b,8a,g,e,d,e,a,f#,2g,d,g,8g,8a,8g,8f#,e,e,e,a,8a,8b,8a,8g,f#,d,d,b,8b,8c6,8b,8a,g,e,d,e,a,f#,1g,d,g,g,g,2f#,f#,g,f#,e,2d,a,b,8a,8a,8g,8g,d6,d,d,e,a,f#,2g"
 };
 
+/**
+ * This function updates the display when the alarm menu is selected.
+ */
 void alarmDisplay()
 {
 	if(menuGetCurrentPosition() == MENU_EDIT_AL_SONG) {
@@ -65,6 +83,9 @@ void alarmDisplay()
 	}
 }
 
+/**
+ * This function saves the alarm configuration to non-volatile storage.
+ */
 void alarmOnSave()
 {
 	menuSave(MENU_EDIT_AL_HOURS);
@@ -74,11 +95,19 @@ void alarmOnSave()
 	menuSave(MENU_EDIT_AL_SONG);
 }
 
+/**
+ * This function initializes the alarm
+ */
 void alarmSetup()
 {
 	alarmSounding = false;
 }
 
+/**
+ * This function updates the alarm status. This means sounding
+ * the alarm when appropriate, which also means waking up the
+ * display, and stopping it when finished.
+ */
 void alarmUpdate()
 {
 	if(!alarmSounding && menuGetValue(MENU_EDIT_AL_ENABLE)
@@ -98,12 +127,21 @@ void alarmUpdate()
 	}
 }
 
+/**
+ * This function is used to make the alarm stop, if it was sounding.
+ * Usually this is called by the menu code when they know the alarm is
+ * sounding and user action for stopping the alarm was detected.
+ */
 void alarmStop()
 {
 	alarmSounding = false;
 	toneStop();
 }
 
+/**
+ * Indicates if the alarm is currently sounding.
+ * @return true if the alarm is sounding, false if it isn't.
+ */
 bool alarmIsSounding()
 {
 	return alarmSounding;
