@@ -41,7 +41,7 @@
 bool antiPoisoningInProgress = false;
 unsigned long lastDigitChange;
 String digitCycle[] = {
-	"000000", "111111", "222222", "333333", "444444", "555555", "666666", "777777", "888888", "999999", "000000"
+	"111111", "000000", "222222", "333333", "444444", "555555", "666666", "777777", "888888", "999999", "000000"
 };
 #define CYCLE_DELAY		150
 #define MAX_DIGITS_CYCLE	11
