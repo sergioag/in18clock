@@ -28,28 +28,52 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+/*
+ * This is the driver for the Dallas DS18B20 device, which is connected via a OneWire
+ * interface to the D7 pin.
+ *
+ * This implementation is based on the datasheet found at:
+ * https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf
+ */
+
 #include <OneWire.h>
 #include "ds18b20.h"
 #include "pins.h"
 
+// OneWire object
 OneWire ds(PIN_DS18B20);
 
+// Flag that indicates of the device is present
 bool isPresent = false;
 
-byte addr[8];
-
+/**
+ * Initializes the One-Wire bus by searching devices. Since we only expect one device,
+ * if we found it we stop and mark as present. Since this is only called at startup, it
+ * means that the sensor cannot be hot-plugged.
+ */
 void ds18b20Setup()
 {
-	if(ds.search(addr)) {
+	byte address[8];
+
+	if(ds.search(address)) {
 		isPresent = true;
 	}
 }
 
+/**
+ * Indicates if the Dallas device was detected in the One-Wire bus.
+ * @return 	True if the device was detected. False if it isn't.
+ */
 bool ds18b20IsPresent()
 {
 	return isPresent;
 }
 
+/**
+ * Obtains the current temperature. This will query the Dallas device
+ * to obtain the latest temperature available.
+ * @return	The current temperature in celsius degrees.
+ */
 float ds18b20ReadTemperature()
 {
 	byte TempRawData[2];
