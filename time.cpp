@@ -104,7 +104,7 @@ String antiPoisoning(String str)
 			// phase left them) to the back, but stopping if we get to the
 			// digit from the time display
 			case 1:
-				if(millis() - lastDigitChange > (4*CYCLE_DELAY)) {
+				if(millis() - lastDigitChange > CYCLE_DELAY) {
 					lastDigitChange = millis();
 					currentDigit--;
 					if(currentDigit == 0) antiPoisoningInProgress = false;
