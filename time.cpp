@@ -41,13 +41,15 @@
 bool antiPoisoningInProgress = false;
 unsigned long lastDigitChange;
 String digitCycle[] = {
-	"111111", "000000", "222222", "333333", "444444", "555555", "666666", "777777", "888888", "999999", "000000"
+	"111111", "000000", "222222", "999999", "888888", "333333", "444444", "777777", "666666", "555555"
 };
 #define CYCLE_DELAY		150
-#define MAX_DIGITS_CYCLE	11
+#define MAX_DIGITS_CYCLE	sizeof(digitCycle)/sizeof(String)
 #define DISPLAY_GRACE_TIME	10000
 int currentDigit = 0;
 long lastShow = 0;
+int antipoisonPhase = 0;
+int digitMask = 0;
 
 String getTimeString(int hours, int minutes, int seconds)
 {
@@ -65,6 +67,8 @@ void resetAntiPoisoning()
 {
 	lastDigitChange = millis();
 	currentDigit = 0;
+	antipoisonPhase = 0;
+	digitMask = 0;
 	antiPoisoningInProgress = true;
 }
 
@@ -86,11 +90,41 @@ void timeWakeUpDisplay()
 String antiPoisoning(String str)
 {
 	if(antiPoisoningInProgress) {
-		str = digitCycle[currentDigit];
-		if(millis() - lastDigitChange > CYCLE_DELAY) {
-			lastDigitChange = millis();
-			currentDigit++;
-			if(currentDigit == MAX_DIGITS_CYCLE) antiPoisoningInProgress = false;
+		switch(antipoisonPhase) {
+			// First phase is to run all the digits from back to front
+			case 0:
+				str = digitCycle[currentDigit];
+				if(millis() - lastDigitChange > CYCLE_DELAY) {
+					lastDigitChange = millis();
+					currentDigit++;
+					if(currentDigit == (MAX_DIGITS_CYCLE-1)) antipoisonPhase++;
+				}
+				break;
+			// Second phase is to run the digits from front (where the first
+			// phase left them) to the back, but stopping if we get to the
+			// digit from the time display
+			case 1:
+				if(millis() - lastDigitChange > (4*CYCLE_DELAY)) {
+					lastDigitChange = millis();
+					currentDigit--;
+					if(currentDigit == 0) antiPoisoningInProgress = false;
+				}
+
+				for(int i = 0; i < 6; i++) {
+					if(digitMask & (1 << i)) {
+						// Do nothing
+					}
+					else {
+						if(str[i] == digitCycle[currentDigit][0]) {
+							digitMask |= 1 << i;
+						}
+						else {
+							str[i] = digitCycle[currentDigit][0];
+
+						}
+					}
+				}
+				break;
 		}
 	}
 	return str;
