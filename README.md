@@ -33,9 +33,7 @@ This firmware supports most of the features of the official firmware, plus some 
 - LED configuration, with 3 different settings: off, fireworks and fixed (you can configure the specific color from a palette of 262144).
 - Turn on/off time: allows selected a time range when your clock is completely powered down. This is done to avoid using the tubes at times you don't care (i.e. while sleeping or being out of the house/office) or because some people find difficult sleeping with all the light emitted by the clock.
 - IR control, supporting Sony RM-X153 remotes (only uses Mode, Up and Down keys).
-
-Unsupported features:
-- GPS (I don't have the GPS accessory, so I cannot develop support for it)
+- GPS, including configurable time zone.
 
 Planned features:
 - Extended IR control support: use some other keys that may be useful for easier navigation (maybe?).
