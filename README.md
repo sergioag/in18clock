@@ -60,14 +60,20 @@ By default, the clock is in the "Time" mode which, you guessed it, displays the 
 
 Time
 ====
-This mode allows viewing and editing the time and time format. When entering the menu, the following options will be available:
+This mode allows viewing and editing the timezone, time and time format. When entering the menu, the following options will be available:
 - 12/24 hours format: you can select either "12" or "24" (default).
+- Timezone sign: plus (+) is indicated by dots turned off, while minus (-) is indicated with dots turned on.
+- Timezone hours (0-14)
+- Timezone minutes (0,15,30,45)
 - Hours (0-23 or 1-12, depending on the previous setting).
 - Minutes (0-59)
 - Seconds (0-59)
 
 When 12 hours mode is enabled, the lower dots indicate PM if illuminated or AM if not. The upper dots flash once per second.
 When 24 hours mode is enabled, both the lower and upper dots flash once per second.
+
+For example, UTC-8:00 is shown as "000800" with dots turned on. UTC+2 is shown as "000200" with dots turned off. UTC-3:15 is
+shown as "000315" with dots turned on.
 
 Date
 ====
@@ -158,3 +164,5 @@ This repository includes the following third-party libraries, found in the "libs
 | Time              | 1.5        | LGPLv2.1 | (http://playground.arduino.cc/code/time)         |
 | Tone              | 1.0.0      | GPLv3    | (https://github.com/bhagman/Tone)                |
 | IRremote          | 2.1.0      | LGPLv2.1 | (https://github.com/shirriff/Arduino-IRremote)   |
+| NeoGPS            | 4.2.9      | GPLv3    | (https://github.com/SlashDevin/NeoGPS)           |
+
