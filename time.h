@@ -47,5 +47,7 @@ void timeOnSave();
 void timeWakeUpDisplay();
 
 String getTimeString(int hours, int minutes, int seconds);
+long timeGetUTCOffsetMinutes();
+long timeGetUTCOffset();
 
 #endif //IN18CLOCK_TIME_H

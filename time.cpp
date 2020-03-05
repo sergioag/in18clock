@@ -65,22 +65,7 @@ String getTimeString(int hours, int minutes, int seconds)
 
 String getUTCConfigString()
 {
-	int minutes = 0;
-	switch(menuGetValue(MENU_EDIT_UTC_MINUTES)) {
-		case TIME_UTC_0M:
-			break;
-		case TIME_UTC_15M:
-			minutes = 15;
-			break;
-		case TIME_UTC_30M:
-			minutes = 30;
-			break;
-		case TIME_UTC_45M:
-			minutes = 45;
-			break;
-	}
-
-	return "00" + PreZero(menuGetValue(MENU_EDIT_UTC_HOURS)) + PreZero(minutes);
+	return "00" + PreZero(menuGetValue(MENU_EDIT_UTC_HOURS)) + PreZero(timeGetUTCOffsetMinutes());
 }
 
 void resetAntiPoisoning()
@@ -184,8 +169,9 @@ void timeEditDisplay()
 			break;
 		case MENU_EDIT_UTC_HOURS:
 		case MENU_EDIT_UTC_MINUTES:
+		case MENU_EDIT_UTC_SIGN:
 			displaySetValue(getUTCConfigString());
-			if(menuGetValue(MENU_EDIT_UTC_HOURS) < 0) {
+			if(menuGetValue(MENU_EDIT_UTC_SIGN) == 1) {
 				displaySetUpperDots(true);
 				displaySetLowerDots(true);
 			}
@@ -221,5 +207,35 @@ void timeOnSave()
 	menuSave(MENU_EDIT_TIME_FORMAT);
 	menuSave(MENU_EDIT_UTC_HOURS);
 	menuSave(MENU_EDIT_UTC_MINUTES);
+	menuSave(MENU_EDIT_UTC_SIGN);
+}
+
+long timeGetUTCOffsetMinutes()
+{
+	switch(menuGetValue(MENU_EDIT_UTC_MINUTES)) {
+		case TIME_UTC_0M:
+		default:
+			return 0;
+		case TIME_UTC_15M:
+			return 15;
+		case TIME_UTC_30M:
+			return 30;
+		case TIME_UTC_45M:
+			return 45;
+	}
 
 }
+
+long timeGetUTCOffset()
+{
+	long hours = menuGetValue(MENU_EDIT_UTC_HOURS);
+	long minutes = timeGetUTCOffsetMinutes();
+	int sign = menuGetValue(MENU_EDIT_UTC_SIGN);
+
+	long offset = (hours * 3600) + (minutes * 60);
+
+	if(sign == 1) offset *= -1L;
+
+	return offset;
+}
+
