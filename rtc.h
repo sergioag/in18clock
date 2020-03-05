@@ -47,4 +47,5 @@ typedef struct rtc_info
 void rtcSetup();
 rtc_info *rtcGetTime();
 void rtcSetTime(rtc_info *rtcInfo);
+void rtcUpdateFromUTC(rtc_info *rtcInfoInUTC);
 #endif //IN18CLOCK_RTC_H

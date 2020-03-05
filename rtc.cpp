@@ -31,6 +31,7 @@
 #include <Time.h>
 #include <Wire.h>
 #include "rtc.h"
+#include "time.h"
 
 #define DS3231_ADDRESS	0x68
 byte zero = 0x00;
@@ -73,24 +74,39 @@ rtc_info *rtcGetTime()
 	return &rtcInfo;
 }
 
-void rtcSetTime(rtc_info *rtcInfo)
+void updateDallasFromArduinoTime()
 {
 	Wire.beginTransmission(DS3231_ADDRESS);
 	Wire.write(zero);
 
-	Wire.write(decToBcd(rtcInfo->seconds));
-	Wire.write(decToBcd(rtcInfo->minutes));
-	Wire.write(decToBcd(rtcInfo->hours));
-	Wire.write(decToBcd(rtcInfo->day_of_week));
-	Wire.write(decToBcd(rtcInfo->days));
-	Wire.write(decToBcd(rtcInfo->months));
-	Wire.write(decToBcd(rtcInfo->years));
+	Wire.write(decToBcd(second()));
+	Wire.write(decToBcd(minute()));
+	Wire.write(decToBcd(hour()));
+	Wire.write(decToBcd(weekday()));
+	Wire.write(decToBcd(day()));
+	Wire.write(decToBcd(month()));
+	Wire.write(decToBcd(year() % 1000));
 
 	Wire.write(zero); //ensure oscillator is running
 
 	Wire.endTransmission();
 
+}
+
+void rtcUpdateFromUTC(rtc_info *rtcInfoInUTC)
+{
+	// Update the boards RTC, since this is the one we use
+	setTime(rtcInfoInUTC->hours, rtcInfoInUTC->minutes, rtcInfoInUTC->seconds, rtcInfoInUTC->days, rtcInfoInUTC->months, rtcInfoInUTC->years);
+
+	adjustTime(timeGetUTCOffset());
+
+	updateDallasFromArduinoTime();
+}
+
+void rtcSetTime(rtc_info *rtcInfo)
+{
 	// Update the boards RTC, since this is the one we use
 	setTime(rtcInfo->hours, rtcInfo->minutes, rtcInfo->seconds, rtcInfo->days, rtcInfo->months, rtcInfo->years);
 
+	updateDallasFromArduinoTime();
 }
