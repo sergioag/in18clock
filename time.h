@@ -34,6 +34,11 @@
 #define TIME_FORMAT_24H		0
 #define TIME_FORMAT_12H		1
 
+#define TIME_UTC_0M		0
+#define TIME_UTC_15M		1
+#define TIME_UTC_30M		2
+#define TIME_UTC_45M		3
+
 void timeOnShow(bool isShowing);
 void timeDisplay();
 void timeEditDisplay();

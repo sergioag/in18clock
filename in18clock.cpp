@@ -79,6 +79,10 @@ menu_struct menu[] = {
 {MENU_ONOFF_CONFIG,		NO_PARENT,		MENU_EDIT_OFF_HOUR,	MENU_EDIT_ONOFF_ENABLE,	0,	0,	0,	NO_LOAD,	0,		onOffDisplay,	0,	0,	0,	onOffSave,	0},
 /* 12/24 hours edit */
 {MENU_EDIT_TIME_FORMAT,		MENU_TIME,		NO_CHILD,		NO_CHILD,		0,	0,	1,	1,	B00001100,		timeEditDisplay,0,	0,	0,	0,0},
+/* UTC Offset Hours */
+{MENU_EDIT_UTC_HOURS,   	MENU_TIME, 		NO_CHILD,		NO_CHILD,		0,	-12,	14,	19,		B00001100,		timeEditDisplay,0,	0,	0,	0,0},
+/* UTC Offset Minutes */
+{MENU_EDIT_UTC_MINUTES, 	MENU_TIME, 		NO_CHILD,		NO_CHILD,		0,	0,	3,	20,		B00110000,		timeEditDisplay,0,	0,	0,	0,0},
 /* Hours edit */
 {MENU_EDIT_HOURS,		MENU_TIME,		NO_CHILD,		NO_CHILD,		0,	0,	23,	NO_LOAD,	B00000011,		timeEditDisplay,0,	0,	0,	0,0},
 /* Minutes edit */

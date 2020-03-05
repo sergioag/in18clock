@@ -63,6 +63,26 @@ String getTimeString(int hours, int minutes, int seconds)
 	}
 }
 
+String getUTCConfigString()
+{
+	int minutes = 0;
+	switch(menuGetValue(MENU_EDIT_UTC_MINUTES)) {
+		case TIME_UTC_0M:
+			break;
+		case TIME_UTC_15M:
+			minutes = 15;
+			break;
+		case TIME_UTC_30M:
+			minutes = 30;
+			break;
+		case TIME_UTC_45M:
+			minutes = 45;
+			break;
+	}
+
+	return "00" + PreZero(menuGetValue(MENU_EDIT_UTC_HOURS)) + PreZero(minutes);
+}
+
 void resetAntiPoisoning()
 {
 	lastDigitChange = millis();
@@ -149,22 +169,36 @@ void timeDisplay()
 
 void timeEditDisplay()
 {
-	if(menuGetCurrentPosition() == MENU_EDIT_TIME_FORMAT) {
-		switch(menuGetValue(MENU_EDIT_TIME_FORMAT)) {
-			case TIME_FORMAT_24H:
-				displaySetValue("002400");
-				break;
-			case TIME_FORMAT_12H:
-				displaySetValue("001200");
-				break;
-		}
-		displaySetUpperDots(false);
-		displaySetLowerDots(false);
-	}
-	else {
-		displaySetValue(getTimeString(menuGetValue(MENU_EDIT_HOURS), menuGetValue(MENU_EDIT_MINUTES), menuGetValue(MENU_EDIT_SECONDS)));
-		displaySetUpperDots(false);
-		displaySetLowerDots(menuGetValue(MENU_EDIT_TIME_FORMAT) == TIME_FORMAT_12H && menuGetValue(MENU_EDIT_HOURS) >= 12);
+	switch(menuGetCurrentPosition()) {
+		case MENU_EDIT_TIME_FORMAT:
+			switch(menuGetValue(MENU_EDIT_TIME_FORMAT)) {
+				case TIME_FORMAT_24H:
+					displaySetValue("002400");
+					break;
+				case TIME_FORMAT_12H:
+					displaySetValue("001200");
+					break;
+			}
+			displaySetUpperDots(false);
+			displaySetLowerDots(false);
+			break;
+		case MENU_EDIT_UTC_HOURS:
+		case MENU_EDIT_UTC_MINUTES:
+			displaySetValue(getUTCConfigString());
+			if(menuGetValue(MENU_EDIT_UTC_HOURS) < 0) {
+				displaySetUpperDots(true);
+				displaySetLowerDots(true);
+			}
+			else {
+				displaySetUpperDots(false);
+				displaySetLowerDots(false);
+			}
+			break;
+		default:
+			displaySetValue(getTimeString(menuGetValue(MENU_EDIT_HOURS), menuGetValue(MENU_EDIT_MINUTES), menuGetValue(MENU_EDIT_SECONDS)));
+			displaySetUpperDots(false);
+			displaySetLowerDots(menuGetValue(MENU_EDIT_TIME_FORMAT) == TIME_FORMAT_12H && menuGetValue(MENU_EDIT_HOURS) >= 12);
+			break;
 	}
 }
 
@@ -185,5 +219,7 @@ void timeOnSave()
 	rtcSetTime(rtcInfo);
 
 	menuSave(MENU_EDIT_TIME_FORMAT);
+	menuSave(MENU_EDIT_UTC_HOURS);
+	menuSave(MENU_EDIT_UTC_MINUTES);
 
 }
