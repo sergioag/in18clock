@@ -57,7 +57,7 @@
 #include "tone.h"
 
 // This is the version number. First two digits are always "99" to differentiate from official firmware.
-#define VERSION "990102"
+#define VERSION "990103"
 
 /*
  * This is the menu definition. It defines the menu user all over the application. Please see menu.cpp/menu.h
