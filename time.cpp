@@ -43,7 +43,7 @@ unsigned long lastDigitChange;
 String digitCycle[] = {
 	"111111", "000000", "222222", "999999", "888888", "333333", "444444", "777777", "666666", "555555"
 };
-#define CYCLE_DELAY		150
+#define CYCLE_DELAY		200
 #define MAX_DIGITS_CYCLE	sizeof(digitCycle)/sizeof(String)
 #define DISPLAY_GRACE_TIME	10000
 int currentDigit = 0;
