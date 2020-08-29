@@ -42,7 +42,7 @@ set(${PROJECT_NAME}_SRCS alarm.cpp date.cpp debug.cpp display.cpp ds18b20.cpp gp
 set(${PROJECT_NAME}_HDRS User_Setup.h alarm.h date.h debug.h display.h ds18b20.h gps.h ir.h leds.h menu.h onoff.h pins.h rtc.h temperature.h time.h tone.h utils.h)
 
 ### Additional static libraries to include in the target.
-#set(${PROJECT_NAME}_LIBS )
+set(${PROJECT_NAME}_LIBS ${${PROJECT_NAME}_BOARD}_Wire)
 
 ### Main sketch file
 #set(${PROJECT_NAME}_SKETCH )

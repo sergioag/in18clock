@@ -163,4 +163,4 @@ This repository includes the following third-party libraries, found in the "libs
 | Tone              | 1.0.0      | GPLv3    | (https://github.com/bhagman/Tone)                |
 | IRremote          | 2.1.0      | LGPLv2.1 | (https://github.com/shirriff/Arduino-IRremote)   |
 | NeoGPS            | 4.2.9      | GPLv3    | (https://github.com/SlashDevin/NeoGPS)           |
-
+| DS1307RTC         | 1.4.1      | LGPLv2.1 | (https://github.com/PaulStoffregen/DS1307RTC)    |

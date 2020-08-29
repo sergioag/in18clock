@@ -57,7 +57,7 @@
 #include "tone.h"
 
 // This is the version number. First two digits are always "99" to differentiate from official firmware.
-#define VERSION "990103"
+#define VERSION "990104"
 
 /*
  * This is the menu definition. It defines the menu user all over the application. Please see menu.cpp/menu.h
@@ -143,7 +143,6 @@ void setup() {
 	toneSetup();
 	rtcSetup();
 	ledsSetup();
-	rtcGetTime();
 	ds18b20Setup();
 	gpsSetup();
 	doTest();
@@ -158,7 +157,6 @@ void loop() {
 
 	if(millis() % 10000 == 0) {
 		gpsTimeUpdate();
-		rtcGetTime();
 	}
 
 	gpsUpdate();
