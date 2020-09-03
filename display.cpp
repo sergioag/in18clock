@@ -222,6 +222,12 @@ static word doEditBlink(unsigned int pos)
 	return mask;
 }
 
+#define COUNT_CYCLE	6	/* Set to 3 if you want more brightness,
+ 				 * but it will shorten the tube's life
+ 				 * a lot. Setting to 6 is the safe choice
+ 				 * without any hardware modification.
+ 				 */
+
 /**
  * Turns on or off the tubes every few calls so to restrict the current going
  * through the tubes. This allows controlling the brightness of the tubes.
@@ -240,11 +246,11 @@ static word moveMask()
 	if (callCounter == tubeCounter) onOffTubeMask=TubeON;
 	else onOffTubeMask=TubeOFF;
 	callCounter++;
-	if (callCounter == 3	)
+	if (callCounter == COUNT_CYCLE)
 	{
 		callCounter=0;
 		tubeCounter++;
-		if (tubeCounter == 3) tubeCounter = 0;
+		if (tubeCounter == COUNT_CYCLE) tubeCounter = 0;
 	}
 	return onOffTubeMask;
 }
