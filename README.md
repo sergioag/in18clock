@@ -146,6 +146,17 @@ However, there are some exceptions:
 - When you initially plug in your clock, the power on test will execute normally. That is, the tubes and LEDs will turn on. After that step is finished, it will power off according to the configuration.
 - Power off doesn't apply to other modes outside of Time display. This is by design because the clock will return to that mode if left unattended and therefore power off shortly afterwards.
 
+New display driver
+==================
+The default driver will work with hardware v1.1 out of the box. However, it needs rapidly pulsing the tubes because of a low value anode resistor on the tubes. This may reduce the lifespan of the
+tubes. If there is no pulsing, the small value of the resistors will cause too much current to flow through the tubes, burning them even faster.
+
+The experimental solution for this involves changing those resistors (labeled R1 through R6) to 14K. Any 1206 resistor should do. After you do this, you must select the new display driver by setting NEW_DISPLAY
+to ON in CMakeLists.txt. Keep in mind that this modification is not supported or endorsed by Gra & Afch and will likely void your warranty. Also, I cannot ensure it will actually work correctly.
+
+WARNING: Do not use the new driver unless you've made the hardware modification described or you'll quickly burn the tubes!!!!
+
+
 Known Issues
 ============
 No issues are currently known.

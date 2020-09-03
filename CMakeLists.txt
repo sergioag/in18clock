@@ -37,8 +37,18 @@ set(${PROJECT_NAME}_BOARD mega)
 set(ARDUINO_CPU atmega2560)
 project(${PROJECT_NAME})
 
+# Enable new display code
+# DO NOT enable unless you mod the hardware as described in README.md
+set(NEW_DISPLAY OFF)
+
+if(${NEW_DISPLAY})
+	set(DISPLAY_CODE display_new.cpp)
+else()
+	set(DISPLAY_CODE display.cpp)
+endif()
+
 # Define additional source and header files or default arduino sketch files
-set(${PROJECT_NAME}_SRCS alarm.cpp date.cpp debug.cpp display.cpp ds18b20.cpp gps.cpp ir.cpp in18clock.cpp leds.cpp menu.cpp onoff.cpp rtc.cpp temperature.cpp time.cpp tone.cpp)
+set(${PROJECT_NAME}_SRCS alarm.cpp date.cpp debug.cpp ${DISPLAY_CODE} ds18b20.cpp gps.cpp ir.cpp in18clock.cpp leds.cpp menu.cpp onoff.cpp rtc.cpp temperature.cpp time.cpp tone.cpp)
 set(${PROJECT_NAME}_HDRS User_Setup.h alarm.h date.h debug.h display.h ds18b20.h gps.h ir.h leds.h menu.h onoff.h pins.h rtc.h temperature.h time.h tone.h utils.h)
 
 ### Additional static libraries to include in the target.
